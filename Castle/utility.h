@@ -66,6 +66,7 @@ struct enemy
 	int ArrivalTime;  
 	double FirePower; 
 	int ReloadPeriod; 
+	double Priorty;
 	enemy* next;      //pointer used for linked list construction
 };
 

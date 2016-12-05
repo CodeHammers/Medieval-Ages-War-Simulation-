@@ -29,3 +29,9 @@ void printRegion(enemy * list, int region);
 
 /*A function to detach a node from a list without deleting the node*/
 void DetachEnemy(enemy* ToBeDeleted, enemy* &ActiveH);
+/*A function to update the enemy priorities   */ 
+void UpdatePriority(enemy* &SHhead,double Constants[3]);
+/*A function to calculate priority according to the formula specified in the document   */
+double CalculatePriority(enemy * SHfighter,double Constants[3]);
+/* A function to re-sort the list according to new priority values   */
+void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
