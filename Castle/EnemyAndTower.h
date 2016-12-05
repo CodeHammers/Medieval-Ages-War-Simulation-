@@ -35,3 +35,9 @@ void UpdatePriority(enemy* &SHhead,double Constants[3]);
 double CalculatePriority(enemy * SHfighter,double Constants[3]);
 /* A function to re-sort the list according to new priority values   */
 void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
+
+/*picks N enemies for each tower and shoots them */
+void PickAndShoot(Tower* tower,enemy* &SHhead,enemy* &regHead);
+/* moves shotEnemy to dead list (if health <= zero) + gathering statistics */
+void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead)
+

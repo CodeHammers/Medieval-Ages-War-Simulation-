@@ -78,3 +78,38 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	//he should fall back the lines
 	prev->next=SHfighter;
 }
+//The function picks first N enemies to shoot for all tower at once
+//NO NEED TO CALL IT FOUR TIMES!!!!!!!!
+void PickAndShoot(Tower* tower,enemy* &SHhead,enemy* &regHead, enemy* &DeadHead)
+{
+	enemy* SHiterator=SHhead;
+	enemy* regIterator=regHead;
+	for(int j=0;j<4;j++){
+		int i=0;
+		while(SHiterator!=NULL&&i< tower->TowerKillingCapacity){
+			SHiterator->Health -=tower->TowerFirePower;
+			//call checks if dead
+			checkDead(SHiterator,SHhead,DeadHead);
+			SHiterator=SHiterator->next;
+			i++;
+		}
+		while(regIterator!=NULL&&i< tower->TowerKillingCapacity){
+			regIterator->Health -=tower->TowerFirePower;
+			//call checks if dead
+			checkDead(regIterator,regHead,DeadHead);
+			regIterator=regIterator->next;
+			i++;
+		}
+		tower=tower->next;
+	}
+}
+
+void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead)
+{
+	if(shotEnemy->Health<=0){
+		//preparing to die , gathering statistics
+		DetachEnemy(shotEnemy, activeHead);
+		//Die,Dog!
+		Kill(shotEnemy, DeadHead);
+	}
+}
