@@ -183,3 +183,89 @@ void DetachEnemy(enemy* ToBeDeleted, enemy* &ActiveH)
 	}
 	ToBeDeleted->next = NULL;
 }
+
+void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
+{
+	double damage = 0.0;
+	while (RegFigthers != NULL) {
+		if (RegFigthers->Type != PVR) {
+			damage = (1 / RegFigthers->Distance)*RegFigthers->FirePower;
+			if (RegFigthers->Region == 65)
+				Arr[0] += damage;
+			else if (RegFigthers->Region == 66)
+				Arr[1] += damage;
+			else if (RegFigthers->Region == 67)
+				Arr[2] += damage;
+			else
+				Arr[3] += damage;
+		}
+		RegFigthers->Reloading = true;
+	}
+
+	while (SHfighters != NULL) {
+		damage = (2 / SHfighters->Distance)*SHfighters->FirePower;
+		if (SHfighters->Region == 65)
+			Arr[0] += damage;
+		else if (SHfighters->Region == 66)
+			Arr[1] += damage;
+		else if (SHfighters->Region == 67)
+			Arr[2] += damage;
+		else
+			Arr[3] += damage;
+		SHfighters->Reloading = true;
+	}
+}
+
+void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH,
+	                 int Nregion, castle &Castle)
+{
+	enemy* AF = ActiveF, *ASF = ActiveSF;
+	enemy* inF = inACF.bounds.front, *inSF = inACSFH.bounds.front;
+
+	while (inF != NULL) 
+		inF->Region = (REGION)Nregion; 
+
+	while (inSF != NULL) 
+		inSF->Region = (REGION)Nregion;
+	
+	while (AF != NULL) {
+		AF->Region = (REGION)Nregion;
+		if (AF->Distance < Castle.towers[Nregion].UnpavedArea)
+			AF->Distance = Castle.towers[Nregion].UnpavedArea;
+	}
+
+	while (ASF != NULL) {
+		ASF->Region = (REGION)Nregion;
+		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea)
+			ASF->Distance = Castle.towers[Nregion].UnpavedArea;
+	}
+}
+
+void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF, 
+	                  enemy* &ActiveSF, Queue &inACF, Queue &inACSFH)
+{
+	for (int i = 0; i<4; i++) {
+		Castle.towers[i].Health -= Arr[i];
+		if (Castle.towers[i].Health <= 0) {
+			Castle.towers[i].Destroyed = true;
+
+			int newRegion = (i + 1) % 4;
+			for (int i = 0; i < 3; i++) {
+				if (Castle.towers[newRegion].Destroyed)
+					newRegion++;
+				else
+					break;
+			}
+
+			RelocateEnemies(ActiveF, ActiveSF, inACF, inACSFH, newRegion,Castle);
+		}
+	}
+}
+
+
+void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
+{
+	double Arr[4];
+	EnemyToTowerDamage(AF, ASF,Arr);
+	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
+}

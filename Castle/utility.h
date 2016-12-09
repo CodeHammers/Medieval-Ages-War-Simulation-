@@ -42,7 +42,8 @@ struct Tower
 	double Health;
 	int TowerKillingCapacity; //how many enemies the tower can deal with
 	double TowerFirePower;    
-	double UnpavedArea;       
+	int UnpavedArea;  
+	bool Destroyed;
 	Tower* next;              //pointer used for linked list construction
 };
 
@@ -67,6 +68,7 @@ struct enemy
 	double FirePower; 
 	int ReloadPeriod; 
 	double Priorty;
+	bool Reloading;
 	enemy* next;      //pointer used for linked list construction
 };
 
