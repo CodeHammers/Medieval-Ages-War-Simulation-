@@ -62,3 +62,58 @@ void LoadFile(double* Con,Tower*&THead ,Queue &regHead,Queue &SFH)
 	}
 	input.close();
 }
+
+
+void PrintTabs()
+{
+	ofstream out("output.txt", ios::app);
+	cout << "KTS     S     FD     KD     FT" << endl;
+}
+
+
+void OutputKilled(int FD, int KD, int FT,int KTS, int S)
+{
+	ofstream out("output.txt", ios::app);
+	out << left << setw(5) << setfill(' ') << KTS << " ";
+	out << left << setw(5) << setfill(' ') << S   << " ";
+	out << left << setw(5) << setfill(' ') << FD  << " ";
+	out << left << setw(5) << setfill(' ') << KD  << " ";
+	out << left << setw(5) << setfill(' ') << FT  << " ";
+	out << endl;
+}
+
+
+void OutputSimStatus(Statistics &stats,castle &Castle, char whoWon)
+{
+	ofstream out("output.txt", ios::app);
+
+	out << "T1_Total_Damage      T2_Total_Damage      T3_Total_Damage      T4_Total_Damage" << endl;
+	out << "   " << stats.Tower_intialHealth - Castle.towers[0].Health;
+	out << "   " << stats.Tower_intialHealth - Castle.towers[1].Health;
+	out << "   " << stats.Tower_intialHealth - Castle.towers[2].Health;
+	out << "   " << stats.Tower_intialHealth - Castle.towers[3].Health;
+	out << endl << endl;
+
+	out << "R1_Distance      R2_Distance      R3_Distance      R4_Distance" << endl;
+	out << "  " << Castle.towers[0].UnpavedArea;
+	out << "  " << Castle.towers[1].UnpavedArea;
+	out << "  " << Castle.towers[2].UnpavedArea;
+	out << "  " << Castle.towers[3].UnpavedArea;
+	cout << endl << endl;
+
+	if (whoWon == 'C') {
+		out << "GAME IS A WIN" << endl;
+		out << "Total Number of Enemies : " << stats.Total_killed << endl;
+		out << "Avarage Figth Delay : " << (double)stats.FightDelay / (double)stats.Total_killed << endl;
+		out << "Avarage Kill Delay : " << (double)stats.KillDelay / (double)stats.Total_killed << endl;
+	}
+	else {
+		cout << "GAME IS A LOSS" << endl;
+		out << "Number of Killed Enemies : " << stats.Total_killed << endl;
+		out << "Number of Alive Enemies : " << stats.Total_active + stats.Total_inactive << endl;
+		out << "Avarage Figth Delay : " << (double)stats.FightDelay / (double)stats.Total_killed << endl;
+		out << "Avarage Kill Delay : " << (double)stats.KillDelay / (double)stats.Total_killed << endl;
+	}
+	out << "END OF SIMULATION" << endl;
+	out.close();
+}

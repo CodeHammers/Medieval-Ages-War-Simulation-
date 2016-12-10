@@ -69,6 +69,9 @@ struct enemy
 	int ReloadPeriod; 
 	double Priorty;
 	bool Reloading;
+	int DeathTime;
+	int FirstShotTime;
+	int Hold;
 	enemy* next;      //pointer used for linked list construction
 };
 
@@ -84,6 +87,18 @@ struct Queue
 	enemy Content;
 	Bounds bounds;
 };
+
+//storing all the variables needed in stats gathering.
+struct Statistics
+{
+	int Total_inactive;
+	int Total_active;
+	int Total_killed;
+	int FightDelay;
+	int KillDelay;
+	int Tower_intialHealth;
+};
+
 
 //Functions Prototype
 

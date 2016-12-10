@@ -1,5 +1,5 @@
-#include <iostream>          //use cin, cout, endl
-#include<iomanip>            //setw(), setfill(), alligment operators
+#include <iostream>           //use cin, cout, endl
+#include <iomanip>            //setw(), setfill(), alligment operators
 #include "utility.h"
 using namespace std;
 
@@ -40,3 +40,5 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
 void PickAndShoot(Tower* tower,enemy* &SHhead,enemy* &regHead);
 /* moves shotEnemy to dead list (if health <= zero) + gathering statistics */
 void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead);
+
+void OutputKilled(int FD, int KD, int FT, int KTS, int S);

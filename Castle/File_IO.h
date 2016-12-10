@@ -6,3 +6,5 @@
 
 /*A function to load the input file and extract data*/
 void LoadFile(double* Con,Tower*&THead ,Queue &regHead,Queue &SFH);
+
+void PrintTabs();

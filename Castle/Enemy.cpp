@@ -188,7 +188,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 {
 	double damage = 0.0;
 	while (RegFigthers != NULL) {
-		if (RegFigthers->Type != PVR) {
+		if (RegFigthers->Type != PVR && RegFigthers->Reloading == false) {
 			damage = (1 / RegFigthers->Distance)*RegFigthers->FirePower;
 			if (RegFigthers->Region == 65)
 				Arr[0] += damage;
@@ -200,19 +200,25 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 				Arr[3] += damage;
 		}
 		RegFigthers->Reloading = true;
+		RegFigthers->Hold = RegFigthers->ReloadPeriod;
+		RegFigthers = RegFigthers->next;
 	}
 
 	while (SHfighters != NULL) {
-		damage = (2 / SHfighters->Distance)*SHfighters->FirePower;
-		if (SHfighters->Region == 65)
-			Arr[0] += damage;
-		else if (SHfighters->Region == 66)
-			Arr[1] += damage;
-		else if (SHfighters->Region == 67)
-			Arr[2] += damage;
-		else
-			Arr[3] += damage;
-		SHfighters->Reloading = true;
+		if (!SHfighters->Reloading) {
+			damage = (2 / SHfighters->Distance)*SHfighters->FirePower;
+			if (SHfighters->Region == 65)
+				Arr[0] += damage;
+			else if (SHfighters->Region == 66)
+				Arr[1] += damage;
+			else if (SHfighters->Region == 67)
+				Arr[2] += damage;
+			else
+				Arr[3] += damage;
+			SHfighters->Reloading = true;
+			SHfighters->Hold = SHfighters->ReloadPeriod;
+			SHfighters = SHfighters->next;
+		}
 	}
 }
 
@@ -222,22 +228,28 @@ void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH
 	enemy* AF = ActiveF, *ASF = ActiveSF;
 	enemy* inF = inACF.bounds.front, *inSF = inACSFH.bounds.front;
 
-	while (inF != NULL) 
-		inF->Region = (REGION)Nregion; 
+	while (inF != NULL) {
+		inF->Region = (REGION)Nregion;
+		inF = inF->next;
+	}
 
-	while (inSF != NULL) 
+	while (inSF != NULL) {
 		inSF->Region = (REGION)Nregion;
+		inSF = inSF->next;
+	}
 	
 	while (AF != NULL) {
 		AF->Region = (REGION)Nregion;
 		if (AF->Distance < Castle.towers[Nregion].UnpavedArea)
 			AF->Distance = Castle.towers[Nregion].UnpavedArea;
+		AF = AF->next;
 	}
 
 	while (ASF != NULL) {
 		ASF->Region = (REGION)Nregion;
 		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea)
 			ASF->Distance = Castle.towers[Nregion].UnpavedArea;
+		ASF = ASF->next;
 	}
 }
 
@@ -268,4 +280,46 @@ void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 	double Arr[4];
 	EnemyToTowerDamage(AF, ASF,Arr);
 	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
+}
+
+
+void CollectStatistics(enemy* DeadHead,Statistics &stats,ofstream &out)
+{
+	int FD, KD, FT;
+	while (DeadHead != NULL) {
+		FD = DeadHead->FirstShotTime - DeadHead->ArrivalTime;
+		KD = DeadHead->DeathTime - DeadHead->FirstShotTime;
+		FT = DeadHead->DeathTime - DeadHead->ArrivalTime;
+		stats.FightDelay += FD;
+		stats.KillDelay += KD;
+		OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID);
+		DeadHead = DeadHead->next;
+	}
+	//delete all killed enemies after printing, to be done later.
+}
+
+//should be called simultaneoulsy with the activate function.
+void CheckReloadingEnemies(enemy* &ACF, enemy* &ACSF)
+{
+	enemy* it_ACF = ACF, *it_ACSF = ACSF;
+
+	while (it_ACF != NULL) {
+		if (it_ACF->Reloading) {
+			if (it_ACF->Hold == 0)
+				it_ACF->Reloading = false;
+			else
+				it_ACF->Hold--;
+		}
+		it_ACF = it_ACF->next;
+	}
+
+	while (it_ACSF != NULL) {
+		if (it_ACSF->Reloading) {
+			if (it_ACSF->Hold == 0)
+				it_ACSF->Reloading = false;
+			else
+				it_ACSF->Hold--;
+		}
+		it_ACSF = it_ACSF->next;
+	}
 }
