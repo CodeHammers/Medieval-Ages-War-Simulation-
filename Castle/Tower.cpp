@@ -46,9 +46,11 @@ void UpdatePriority(enemy* &SHhead,double Constants[3])
 	enemy* tempHead;
 	while(SHhead!=NULL){
 		SHhead->Priorty=CalculatePriority(SHhead,Constants);
+		enemy* temp= SHhead->next;
 		insertByPriority(tempHead,SHhead);
-		SHhead=SHhead->next;
+		SHhead=temp;
 	}
+	SHhead=tempHead;
 }
 //The function inserts the enemy in the list while keeping
 //the list sorted by priority 
@@ -75,39 +77,43 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	}
 	//now current is null , prev is pointing  to the last element in the list
 	//existing the loop mean this enemy has the least priority , therefore 
-	//he should fall back the lines
+	//he should fall back behind
 	prev->next=SHfighter;
 }
 //The function picks first N enemies to shoot for all tower at once
 //NO NEED TO CALL IT FOUR TIMES!!!!!!!!
-void PickAndShoot(Tower* tower,enemy* &SHhead,enemy* &regHead, enemy* &DeadHead)
+void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHead,int timeStep)
 {
 	enemy* SHiterator=SHhead;
 	enemy* regIterator=regHead;
 	for(int j=0;j<4;j++){
 		int i=0;
-		while(SHiterator!=NULL&&i< tower->TowerKillingCapacity){
-			SHiterator->Health -=tower->TowerFirePower;
+		while(SHiterator!=NULL&&i< towers[j].TowerKillingCapacity){
+			if(SHiterator->FirstShotTime==-1)
+				SHiterator->FirstShotTime=timeStep;
+			SHiterator->Health -=towers[j].TowerFirePower;
 			//call checks if dead
-			checkDead(SHiterator,SHhead,DeadHead);
+			checkDead(SHiterator,SHhead,DeadHead,timeStep);
 			SHiterator=SHiterator->next;
 			i++;
 		}
-		while(regIterator!=NULL&&i< tower->TowerKillingCapacity){
-			regIterator->Health -=tower->TowerFirePower;
+		while(regIterator!=NULL&&i< towers[j].TowerKillingCapacity){
+			if(SHiterator->FirstShotTime==-1)
+				SHiterator->FirstShotTime=timeStep;
+			regIterator->Health -=towers[j].TowerFirePower;
 			//call checks if dead
-			checkDead(regIterator,regHead,DeadHead);
+			checkDead(regIterator,regHead,DeadHead,timeStep);
 			regIterator=regIterator->next;
 			i++;
 		}
-		tower=tower->next;
 	}
 }
 
-void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead)
+void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeStep)
 {
 	if(shotEnemy->Health<=0){
 		//preparing to die , gathering statistics
+		shotEnemy->DeathTime=timeStep;
 		DetachEnemy(shotEnemy, activeHead);
 		//Die,Dog!
 		Kill(shotEnemy, DeadHead);

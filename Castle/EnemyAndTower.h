@@ -1,5 +1,5 @@
-#include <iostream>           //use cin, cout, endl
-#include <iomanip>            //setw(), setfill(), alligment operators
+#include <iostream>          //use cin, cout, endl
+#include<iomanip>            //setw(), setfill(), alligment operators
 #include "utility.h"
 using namespace std;
 
@@ -37,8 +37,6 @@ double CalculatePriority(enemy * SHfighter,double Constants[3]);
 void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
 
 /*picks N enemies for each tower and shoots them */
-void PickAndShoot(Tower* tower,enemy* &SHhead,enemy* &regHead);
+void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHead,int timeStep);
 /* moves shotEnemy to dead list (if health <= zero) + gathering statistics */
-void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead);
-
-void OutputKilled(int FD, int KD, int FT, int KTS, int S);
+void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead,int timeStep);
