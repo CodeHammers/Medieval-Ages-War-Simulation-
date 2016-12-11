@@ -69,8 +69,15 @@ struct enemy
 	int ReloadPeriod; 
 	double Priorty;
 	bool Reloading;
+	int FirstShotTime;
+	int DeathTime;   
 	enemy* next;      //pointer used for linked list construction
+	enemy()
+	{
+		FirstShotTime=-1;
+	}
 };
+
 
 //Queue struct
 struct Bounds
