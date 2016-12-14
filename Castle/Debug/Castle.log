@@ -1,12 +1,3 @@
-﻿  Enemy.cpp
-  Generating Code...
-  Compiling...
-  utility.cpp
-  Tower.cpp
-  Source.cpp
-  Queue.cpp
-  File_IO.cpp
-  Generating Code...
-Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)
+﻿  File_IO.cpp
+  Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.exe
+  Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.pdb (Full PDB)

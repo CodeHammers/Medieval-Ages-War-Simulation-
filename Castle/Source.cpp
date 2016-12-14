@@ -2,8 +2,13 @@
 
 int main()
 {
-	cout<<"Start Working"<<endl;
+	SetWindow();	//adjust game window settings
+	castle ct; // define a castle 
 
+	ct.Xstrt = CastleXStrt;
+	ct.Ystrt = CastleYStrt;
+	ct.W = CastleWidth;
+	ct.L = CastleLength;
 	//Intializing the number of active regular enemies and the number of killed.
 	int RegSize = 0, SHsize = 0, NumKilled = 0;
 
@@ -25,7 +30,11 @@ int main()
 
 	//calling the load file function to extract data from the input file.
 	LoadFile(Constants,TowerHead, in_regFigthersHead, in_SHFighterHead);
-	
+	TowerHead->TL=TowerLength;
+	TowerHead->TW=TowerWidth;
+	TowerHead->UnpavedArea = 60;
+	for (Tower t : ct.towers)
+		t = *TowerHead;
 	//Intializing the time step counter to 1.
 	int timestep = 1;
 
@@ -37,6 +46,7 @@ int main()
 
 		//Activate all shielded enemies with an arrival time matching the timestep.
 		Activate(in_SHFighterHead, ac_SHFighterHead, timestep, SHsize);
+
 
 		//intializing a pointer to store the randomly selected enemy to be killed.
 		enemy* K = NULL; int i = 0;
@@ -72,13 +82,21 @@ int main()
 
 			K = NULL; i++;  //reseting values and updating the loop's counter.
 		}
+		enemy *itr = ac_SHFighterHead;
+		enemy** enemies = new enemy*[SHsize+RegSize];
+		for (int i = 0; i < SHsize; i++) {
+			enemies[i] = itr;
+			itr = itr->next;
+		}
+		itr = ac_regFigthersHead;
+		for (int i = SHsize; i < SHsize+RegSize; i++) {
+			enemies[i] = itr;
+			itr = itr->next;
+		}
+		
+		DrawCastle(ct, timestep);
+		DrawEnemies(enemies, SHsize + RegSize);
 
-		//Printing the output the current timestep.
-		cout << endl << "At time step = " << timestep << endl;
-
-		//Printing the the region's details.
-		printEnemyByRegion(ac_regFigthersHead, ac_SHFighterHead, DeadHead
-			, RegSize + SHsize,NumKilled);
 
 		timestep++; //incrementing the timestep by one. 
 

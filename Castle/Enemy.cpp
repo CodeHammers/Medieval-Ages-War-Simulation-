@@ -292,7 +292,7 @@ void CollectStatistics(enemy* DeadHead,Statistics &stats,ofstream &out)
 		FT = DeadHead->DeathTime - DeadHead->ArrivalTime;
 		stats.FightDelay += FD;
 		stats.KillDelay += KD;
-		OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID);
+		//OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID);
 		DeadHead = DeadHead->next;
 	}
 	//delete all killed enemies after printing, to be done later.

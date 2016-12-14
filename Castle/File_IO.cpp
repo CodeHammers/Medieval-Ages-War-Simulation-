@@ -45,7 +45,7 @@ void LoadFile(double* Con,Tower*&THead ,Queue &regHead,Queue &SFH)
 		Data->ReloadPeriod = ReloadPeriod;
 		Data->Type = Type;
 		Data->Region = Region;
-
+		Data->Distance = 11;
 		/*The next few lines resemble the insertion logic, depending on the
 		the type specified in the input file, we insert pavers and regular
 		fighters in a queue, and we insert shielded fighters in a seprate queue*/
