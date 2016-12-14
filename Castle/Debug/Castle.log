@@ -1,3 +1,8 @@
-﻿  File_IO.cpp
-  Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.exe
-  Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.pdb (Full PDB)
+﻿  Enemy.cpp
+f:\ds project local\ds-project-2016\castle\enemy.cpp(353): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+f:\ds project local\ds-project-2016\castle\enemy.cpp(359): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+f:\ds project local\ds-project-2016\castle\enemy.cpp(365): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+f:\ds project local\ds-project-2016\castle\enemy.cpp(371): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
+  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)

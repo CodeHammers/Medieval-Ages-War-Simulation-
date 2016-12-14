@@ -125,7 +125,7 @@ void MoveFromTo(enemy* &origin, enemy* &destination)
 void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter)
 {
 	enemy* current = inactiveH.bounds.front;
-	enemy* prev = NULL; enemy* temp = NULL; int count = 0;
+	enemy* prev = NULL; enemy* temp = NULL; int count = 0, i = 0;
 
 	/*looping to find all enemies with an arrival time equal to the current 
 	  time step, and activate them */
@@ -133,7 +133,7 @@ void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter)
 
 		if (current->ArrivalTime != timestep) {
 			if (current->ArrivalTime > timestep)  //cause it's sorted.
-				break;   //we don't to continue looping
+				break;   //we don't need to continue looping
 			else {
 				prev = current;
 				current = current->next;
@@ -153,6 +153,7 @@ void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter)
 			temp = current->next;
 			MoveFromTo(current, activeH);   //Activation enemies.
 			counter++;
+			//arr[i]=&
 			current = temp;   //updating current.
 		}	
 	}
@@ -282,20 +283,32 @@ void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
 }
 
+void OutputKilled(int FD, int KD, int FT, int KTS, int S,ofstream &out)
+{
+	out.open("output.txt", ios::app);
+	out << left << setw(5) << setfill(' ') << KTS << " ";
+	out << left << setw(5) << setfill(' ') << S << " ";
+	out << left << setw(5) << setfill(' ') << FD << " ";
+	out << left << setw(5) << setfill(' ') << KD << " ";
+	out << left << setw(5) << setfill(' ') << FT << " ";
+	out << endl;
+}
+
 
 void CollectStatistics(enemy* DeadHead,Statistics &stats,ofstream &out)
 {
-	int FD, KD, FT;
+	int FD, KD, FT; enemy* ToBeDeleted = NULL;
 	while (DeadHead != NULL) {
 		FD = DeadHead->FirstShotTime - DeadHead->ArrivalTime;
 		KD = DeadHead->DeathTime - DeadHead->FirstShotTime;
 		FT = DeadHead->DeathTime - DeadHead->ArrivalTime;
 		stats.FightDelay += FD;
 		stats.KillDelay += KD;
-		//OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID);
+		OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID,out);
+		ToBeDeleted = DeadHead;
 		DeadHead = DeadHead->next;
+		delete ToBeDeleted;
 	}
-	//delete all killed enemies after printing, to be done later.
 }
 
 //should be called simultaneoulsy with the activate function.
@@ -321,5 +334,94 @@ void CheckReloadingEnemies(enemy* &ACF, enemy* &ACSF)
 				it_ACSF->Hold--;
 		}
 		it_ACSF = it_ACSF->next;
+	}
+}
+
+
+void Pave(enemy* &ActiveH, castle &Castle)
+{
+	enemy* ptr = ActiveH;
+
+	while (ptr != NULL)
+	{
+		if (!ptr->Reloading)
+		{
+			int ToBePaved = 0;
+
+			if (ptr->Region == 65) {
+				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[0].UnpavedArea);
+				if (ToBePaved > 0 && ToBePaved <= Castle.towers[0].UnpavedArea)
+					Castle.towers[0].UnpavedArea -= ToBePaved;
+			}
+
+			else if (ptr->Region == 66) {
+				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[1].UnpavedArea);
+				if (ToBePaved > 0 && ToBePaved <= Castle.towers[1].UnpavedArea)
+					Castle.towers[1].UnpavedArea -= ToBePaved;
+			}
+
+			else if (ptr->Region == 67) {
+				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[2].UnpavedArea);
+				if (ToBePaved > 0 && ToBePaved <= Castle.towers[2].UnpavedArea)
+					Castle.towers[2].UnpavedArea -= ToBePaved;
+			}
+
+			else{
+				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[3].UnpavedArea);
+				if (ToBePaved > 0 && ToBePaved <= Castle.towers[3].UnpavedArea)
+					Castle.towers[3].UnpavedArea -= ToBePaved;
+			}
+
+			ptr->Hold = ptr->ReloadPeriod;
+			ptr->Reloading = true;
+		}
+
+		if (ptr->Distance>2)
+			ptr->Distance--;
+		ptr = ptr->next;
+	}
+}
+
+bool IsPaved(enemy* Enemy, castle &Castle)
+{
+	if (Enemy->Region == 65)
+		if (Enemy->Distance - Castle.towers[0].UnpavedArea > 0)
+			return true;
+
+	else if (Enemy->Region == 66)
+		if (Enemy->Distance - Castle.towers[1].UnpavedArea > 0)
+			return true;
+
+	else if (Enemy->Region == 67)
+		if (Enemy->Distance - Castle.towers[2].UnpavedArea > 0)
+			return true;
+
+	else
+		if (Enemy->Distance - Castle.towers[3].UnpavedArea > 0)
+			return true;
+
+	return false;
+}
+
+
+void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
+{
+	enemy*ptr = ActiveH;
+	enemy*ptr2 = ActiveShH;
+
+	while (ptr != NULL)
+	{
+		if (ptr->Type != PVR && ptr->Distance>2)
+			if (IsPaved(ptr, Castle))
+				ptr->Distance--;
+		ptr = ptr->next;
+	}
+
+	while (ptr2 != NULL)
+	{
+		if (ptr2->Distance > 2)
+			if (IsPaved(ptr2, Castle))
+				ptr2->Distance--;
+		ptr2 = ptr2->next;
 	}
 }

@@ -1,6 +1,6 @@
 #include "file_IO.h"
 
-void LoadFile(double* Con,Tower*&THead ,Queue &regHead,Queue &SFH)
+void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH)
 {
 	int Index, T, ArrivalTime, ReloadPeriod, TowerHit;
 	double Health, FirePower, TowerHealth, TowerFireP; char R;
@@ -16,10 +16,12 @@ void LoadFile(double* Con,Tower*&THead ,Queue &regHead,Queue &SFH)
 	//Loading the tower data.
 	input >> TowerHealth >> TowerHit >> TowerFireP;
 	for (int i = 0; i < 4; i++) {
-		if (!InsertTower(THead, TowerHealth, TowerHit, TowerFireP)) {
-			cout << "Error while inserting a tower node, check insert tower function " << endl;
-			return;
-		}
+		Castle.towers[i].Health = TowerHealth;
+		Castle.towers[i].TowerKillingCapacity = TowerHit;
+		Castle.towers[i].TowerFirePower = TowerFireP;
+		Castle.towers[i].TL = TowerLength;
+		Castle.towers[i].TW = TowerWidth;
+		Castle.towers[i].UnpavedArea = 60;
 	}
 
 	//loading the constants used in calculations and storing them in an array.
@@ -71,16 +73,16 @@ void PrintTabs()
 }
 
 
-void OutputKilled(int FD, int KD, int FT,int KTS, int S)
-{
-	ofstream out("output.txt", ios::app);
-	out << left << setw(5) << setfill(' ') << KTS << " ";
-	out << left << setw(5) << setfill(' ') << S   << " ";
-	out << left << setw(5) << setfill(' ') << FD  << " ";
-	out << left << setw(5) << setfill(' ') << KD  << " ";
-	out << left << setw(5) << setfill(' ') << FT  << " ";
-	out << endl;
-}
+//void OutputKilled(int FD, int KD, int FT,int KTS, int S)
+//{
+//	ofstream out("output.txt", ios::app);
+//	out << left << setw(5) << setfill(' ') << KTS << " ";
+//	out << left << setw(5) << setfill(' ') << S   << " ";
+//	out << left << setw(5) << setfill(' ') << FD  << " ";
+//	out << left << setw(5) << setfill(' ') << KD  << " ";
+//	out << left << setw(5) << setfill(' ') << FT  << " ";
+//	out << endl;
+//}
 
 
 void OutputSimStatus(Statistics &stats,castle &Castle, char whoWon)
