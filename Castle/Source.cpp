@@ -45,7 +45,8 @@ int main()
 		CheckReloadingEnemies(ac_regFigthersHead, ac_SHFighterHead);
 		EnemyShoot(ac_regFigthersHead, ac_SHFighterHead, in_regFigthersHead, in_SHFighterHead, ct);
 		//Castlle Shoots Enemies
-		TowerShoot(ac_SHFighterHead, Constants,ac_SHFighterHead,DeadHead,timestep,ct.towers);
+		TowerShoot(ac_SHFighterHead, Constants,ac_SHFighterHead,
+			DeadHead,timestep,ct.towers,RegSize,SHsize);
 		//pavers pave if possible , Enemies move 
 		Pave(ac_regFigthersHead,ct);
 		MoveEnemies(ac_regFigthersHead,ac_SHFighterHead,ct);

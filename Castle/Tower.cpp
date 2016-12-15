@@ -90,10 +90,12 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 }
 //The function picks first N enemies to shoot for all tower at once
 //NO NEED TO CALL IT FOUR TIMES!!!!!!!!
-void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHead,int timeStep)
+void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, 
+				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize)
 {
 	enemy* SHiterator=SHhead;
 	enemy* regIterator=regHead;
+	enemy* shotEnemy=NULL;
 	for(int j=0;j<4;j++){
 		int i=0;
 		while(SHiterator!=NULL&&i< towers[j].TowerKillingCapacity){
@@ -101,8 +103,9 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHe
 				SHiterator->FirstShotTime=timeStep;
 			SHiterator->Health -=towers[j].TowerFirePower;
 			//call checks if dead
-			checkDead(SHiterator,SHhead,DeadHead,timeStep);
+			shotEnemy=SHiterator; 
 			SHiterator=SHiterator->next;
+			checkDead(shotEnemy,SHhead,DeadHead,timeStep,SHsize);
 			i++;
 		}
 		while(regIterator!=NULL&&i< towers[j].TowerKillingCapacity){
@@ -110,17 +113,18 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHe
 				regIterator->FirstShotTime=timeStep;
 			regIterator->Health -=towers[j].TowerFirePower;
 			//call checks if dead
-			enemy* shotEnemy=regIterator; 
+			shotEnemy=regIterator; 
 			regIterator=regIterator->next;
-			checkDead(shotEnemy,regHead,DeadHead,timeStep);
+			checkDead(shotEnemy,regHead,DeadHead,timeStep,RegSize);
 			i++;
 		}
 	}
 }
 
-void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeStep)
+void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeStep,int &size)
 {
 	if(shotEnemy->Health<=0){
+		size--;
 		//preparing to die , gathering statistics
 		shotEnemy->DeathTime=timeStep;
 		DetachEnemy(shotEnemy, activeHead);
@@ -128,8 +132,8 @@ void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeSte
 		Kill(shotEnemy, DeadHead);
 	}
 }
-void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
-				, enemy* &DeadHead,int timeStep,Tower towers[4]){
+void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead, enemy* &DeadHead
+				,int timeStep,Tower towers[4],int &RegSize,int &SHsize){
 	UpdatePriority(SHhead,Constants);
-	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep);
+	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep,RegSize,SHsize);
 }

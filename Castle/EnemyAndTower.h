@@ -41,10 +41,11 @@ double CalculatePriority(enemy * SHfighter,double Constants[3]);
 void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
 
 /*picks N enemies for each tower and shoots them */
-void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHead,int timeStep);
+void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, 
+				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize);
 
 /* moves shotEnemy to dead list (if health <= zero) + gathering statistics */
-void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead,int timeStep);
+void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead,int timeStep,int &size);
 
 void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters, double* Arr);
 
@@ -69,6 +70,6 @@ bool IsPaved(enemy* Enemy, castle &Castle);
 void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle);
 
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
-				, enemy* &DeadHead,int timeStep,Tower towers[4]);
+				, enemy* &DeadHead,int timeStep,Tower towers[4],int &RegSize,int &SHsize);
 
 void getUnPavedAreaResult(Tower t, enemy *e );
