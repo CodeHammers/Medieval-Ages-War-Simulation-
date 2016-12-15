@@ -96,39 +96,32 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 	enemy* SHiterator=SHhead;
 	enemy* regIterator=regHead;
 	enemy* shotEnemy=NULL;
-	for(int j=0;j<4;j++){
-		int i=0;
-		while(SHiterator!=NULL&&i< towers[j].TowerKillingCapacity){
-			if(SHiterator->Region==65+j){
+	for(int k=0;k<4;k++){
+		int i = 0; SHiterator = SHhead, regIterator = regHead;
+		while(SHiterator!=NULL && i< towers[k].TowerKillingCapacity){
+			if(SHiterator->Region==65+k){
 				if(SHiterator->FirstShotTime==-1)
 					SHiterator->FirstShotTime=timeStep;
-				SHiterator->Health -=towers[j].TowerFirePower;
+				SHiterator->Health -=towers[k].TowerFirePower;
 				//call checks if dead
 				shotEnemy=SHiterator; 
-				SHiterator=SHiterator->next;
 				checkDead(shotEnemy,SHhead,DeadHead,timeStep,SHsize);
-				i++;
+				i++; 
 			}
-			else{
-				i++;
-				SHiterator=SHiterator->next;
-			}
+			SHiterator = SHiterator->next;
 		}
-		while(regIterator!=NULL&&i< towers[j].TowerKillingCapacity){
-			if(regIterator->Region==65+j){
+
+		while(regIterator!=NULL && i< towers[k].TowerKillingCapacity){
+			if(regIterator->Region==65+k){
 				if(regIterator->FirstShotTime==-1)
 					regIterator->FirstShotTime=timeStep;
-				regIterator->Health -=towers[j].TowerFirePower;
+				regIterator->Health -=towers[k].TowerFirePower;
 				//call checks if dead
 				shotEnemy=regIterator; 
-				regIterator=regIterator->next;
 				checkDead(shotEnemy,regHead,DeadHead,timeStep,RegSize);
 				i++;
 			}
-			else{
-				i++;
-				regIterator=regIterator->next;
-			}
+			regIterator = regIterator->next;
 		}
 	}
 }

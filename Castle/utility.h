@@ -44,7 +44,6 @@ struct Tower
 	double TowerFirePower;    
 	int UnpavedArea;  
 	bool Destroyed;
-	Tower* next;              //pointer used for linked list construction
 };
 
 struct castle

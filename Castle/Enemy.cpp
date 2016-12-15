@@ -189,8 +189,9 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 {
 	double damage = 0.0;
 	while (RegFigthers != NULL) {
-		if (RegFigthers->Type != PVR && RegFigthers->Reloading == false) {
+		if (RegFigthers->Type != PVR && !RegFigthers->Reloading) {
 			damage = (1 / RegFigthers->Distance)*RegFigthers->FirePower;
+
 			if (RegFigthers->Region == 65)
 				Arr[0] += damage;
 			else if (RegFigthers->Region == 66)
@@ -199,15 +200,18 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 				Arr[2] += damage;
 			else
 				Arr[3] += damage;
+
+			RegFigthers->Reloading = true;
+			RegFigthers->Hold = RegFigthers->ReloadPeriod;
 		}
-		RegFigthers->Reloading = true;
-		RegFigthers->Hold = RegFigthers->ReloadPeriod;
-		RegFigthers = RegFigthers->next;
+		else 
+			RegFigthers = RegFigthers->next;
 	}
 
 	while (SHfighters != NULL) {
 		if (!SHfighters->Reloading) {
 			damage = (2 / SHfighters->Distance)*SHfighters->FirePower;
+
 			if (SHfighters->Region == 65)
 				Arr[0] += damage;
 			else if (SHfighters->Region == 66)
@@ -216,6 +220,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 				Arr[2] += damage;
 			else
 				Arr[3] += damage;
+
 			SHfighters->Reloading = true;
 			SHfighters->Hold = SHfighters->ReloadPeriod;
 			SHfighters = SHfighters->next;
@@ -351,7 +356,7 @@ void Pave(enemy* &ActiveH, castle &Castle)
 
 	while (ptr != NULL)
 	{
-		if (!ptr->Reloading)
+		if (ptr->Type == PVR && !ptr->Reloading)
 		{
 			int UnPavedResult = 0;
 
@@ -377,35 +382,43 @@ void Pave(enemy* &ActiveH, castle &Castle)
 
 		if (ptr->Distance>2)
 			ptr->Distance--;
+
 		ptr = ptr->next;
 	}
 }
-void getUnPavedAreaResult(Tower t, enemy* e){
+
+void getUnPavedAreaResult(Tower t, enemy* e)
+{
 	int UnPavedResult=  e->Distance - e->FirePower;
+
 	if(UnPavedResult<=0)
 		t.UnpavedArea=0;
 	else
 		if(t.UnpavedArea>UnPavedResult)
-			t.UnpavedArea = UnPavedResult;
+			t.UnpavedArea -= UnPavedResult;
 }
 
 bool IsPaved(enemy* Enemy, castle &Castle)
 {
-	if (Enemy->Region == 65)
+	if (Enemy->Region == 65) {
 		if (Enemy->Distance - Castle.towers[0].UnpavedArea > 0)
 			return true;
+	}
 
-	else if (Enemy->Region == 66)
+	if (Enemy->Region == 66) {
 		if (Enemy->Distance - Castle.towers[1].UnpavedArea > 0)
 			return true;
+	}
 
-	else if (Enemy->Region == 67)
+	if (Enemy->Region == 67) {
 		if (Enemy->Distance - Castle.towers[2].UnpavedArea > 0)
 			return true;
+	}
 
-	else
+	if (Enemy->Region == 68) {
 		if (Enemy->Distance - Castle.towers[3].UnpavedArea > 0)
 			return true;
+	}
 
 	return false;
 }

@@ -21,7 +21,8 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH)
 		Castle.towers[i].TowerFirePower = TowerFireP;
 		Castle.towers[i].TL = TowerLength;
 		Castle.towers[i].TW = TowerWidth;
-		Castle.towers[i].UnpavedArea = 60;
+		Castle.towers[i].UnpavedArea = 30;
+		Castle.towers[i].Destroyed = false;
 	}
 
 	//loading the constants used in calculations and storing them in an array.
@@ -49,6 +50,10 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH)
 		Data->Region = Region;
 		Data->Distance = 60;
 		Data->FirstShotTime=-1;
+		Data->Hold = 0;
+		Data->DeathTime = 0;
+		Data->Reloading = false;
+		Data->Priorty = 0.0;
 		/*The next few lines resemble the insertion logic, depending on the
 		the type specified in the input file, we insert pavers and regular
 		fighters in a queue, and we insert shielded fighters in a seprate queue*/
