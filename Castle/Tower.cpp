@@ -46,7 +46,7 @@ double CalculatePriority(enemy *SHfighter,double Constants[3])
 //Perform any needed one 
 void UpdatePriority(enemy* &SHhead,double Constants[3])
 {
-	enemy* tempHead;
+	enemy* tempHead=NULL;
 	while(SHhead!=NULL){
 		SHhead->Priorty=CalculatePriority(SHhead,Constants);
 		enemy* temp= SHhead->next;
