@@ -67,3 +67,6 @@ void Pave(enemy* &ActiveH, castle &Castle);
 bool IsPaved(enemy* Enemy, castle &Castle);
 
 void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle);
+
+void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
+				, enemy* &DeadHead,int timeStep,Tower towers[4]);

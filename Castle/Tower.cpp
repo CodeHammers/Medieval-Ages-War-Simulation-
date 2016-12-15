@@ -123,7 +123,8 @@ void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeSte
 		Kill(shotEnemy, DeadHead);
 	}
 }
-void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead, enemy* &DeadHead,int timeStep,Tower towers[4]){
+void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
+				, enemy* &DeadHead,int timeStep,Tower towers[4]){
 	UpdatePriority(SHhead,Constants);
 	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep);
 }

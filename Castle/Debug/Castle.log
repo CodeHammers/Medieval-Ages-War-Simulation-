@@ -1,8 +1,9 @@
-﻿  Enemy.cpp
-f:\ds project local\ds-project-2016\castle\enemy.cpp(353): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-f:\ds project local\ds-project-2016\castle\enemy.cpp(359): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-f:\ds project local\ds-project-2016\castle\enemy.cpp(365): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-f:\ds project local\ds-project-2016\castle\enemy.cpp(371): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)
+﻿Build started 12/15/2016 10:08:48 AM.
+Project "D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Castle\Castle.vcxproj" on node 2 (Build target(s)).
+Project file contains ToolsVersion="14.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
+C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v140 (Platform Toolset = 'v140') cannot be found. To build using the v140 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v140 to build using the v140 build tools.
+Done Building Project "D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Castle\Castle.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.55
