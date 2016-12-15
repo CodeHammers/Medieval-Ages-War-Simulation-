@@ -195,7 +195,7 @@ void DrawEnemy(const enemy& E, int Ypos)
 void DrawEnemies(enemy* enemies[],int size)
 {
 	//draw enemies at each region 
-	for(int region=A_REG;region<=D_REG;region++)
+	for(int region=65;region<=65+4;region++)
 	{
 		int CountEnemies =0;	//count Enemies at the same distance to draw them vertically if they are <= 15 enemy else print number of enemy in the region
 		bool draw=true;
