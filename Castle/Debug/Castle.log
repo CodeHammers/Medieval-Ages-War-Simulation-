@@ -1,9 +1,24 @@
-﻿Build started 12/15/2016 10:08:48 AM.
+﻿Build started 12/15/2016 10:35:08 AM.
 Project "D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Castle\Castle.vcxproj" on node 2 (Build target(s)).
 Project file contains ToolsVersion="14.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
-C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v140 (Platform Toolset = 'v140') cannot be found. To build using the v140 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v140 to build using the v140 build tools.
-Done Building Project "D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Castle\Castle.vcxproj" (Build target(s)) -- FAILED.
+ClCompile:
+  D:\Z_Kareem\software\VS installation\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Enemy.cpp
+  Enemy.cpp
+d:\z_kareem\cs\faculty\data structures\ds-project-f2016_std\ds-project-2016\castle\enemy.cpp(357): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+d:\z_kareem\cs\faculty\data structures\ds-project-f2016_std\ds-project-2016\castle\enemy.cpp(363): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+d:\z_kareem\cs\faculty\data structures\ds-project-f2016_std\ds-project-2016\castle\enemy.cpp(369): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+d:\z_kareem\cs\faculty\data structures\ds-project-f2016_std\ds-project-2016\castle\enemy.cpp(375): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+Link:
+  D:\Z_Kareem\software\VS installation\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Debug\Castle.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Debug\Castle.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Debug\Castle.lib" /MACHINE:X86 /SAFESEH Debug\Enemy.obj
+  Debug\File_IO.obj
+  Debug\Queue.obj
+  Debug\Source.obj
+  Debug\Tower.obj
+  Debug\utility.obj
+Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  Castle.vcxproj -> D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Debug\Castle.exe
+Done Building Project "D:\Z_Kareem\CS\Faculty\data structures\DS-Project-F2016_std\DS-project-2016\Castle\Castle.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:00.55
+Time Elapsed 00:00:02.12

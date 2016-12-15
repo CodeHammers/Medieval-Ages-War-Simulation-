@@ -278,7 +278,12 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 
 void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 {
+	// Two possible solution 
+	//  1 :  double * Arr= new double[4]();
+	//  2 : make sure the arr is intialized to zero
+	// used the 2nd solution to avoid changing parameter
 	double Arr[4];
+	Arr[0]=0;Arr[1]=0;Arr[2]=0;Arr[3]=0;
 	EnemyToTowerDamage(AF, ASF,Arr);
 	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
 }
