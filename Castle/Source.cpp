@@ -44,7 +44,7 @@ int main()
 		//Enemies Shoot the castle
 		CheckReloadingEnemies(ac_regFigthersHead, ac_SHFighterHead);
 		EnemyShoot(ac_regFigthersHead, ac_SHFighterHead, in_regFigthersHead, in_SHFighterHead, ct);
-		//Castlle Shoots Enemies
+		//Castle Shoots Enemies
 		TowerShoot(ac_SHFighterHead, Constants,ac_SHFighterHead,
 			DeadHead,timestep,ct.towers,RegSize,SHsize);
 		//pavers pave if possible , Enemies move 
