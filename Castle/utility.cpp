@@ -146,15 +146,15 @@ void DrawEnemy(const enemy& E, int Ypos)
 	REGION EnemyRegion = E.Region;
 	switch (EnemyRegion)
 	{
-	case A_REG:
+	case 65:
 		x = CastleXStrt-E.Distance+1;
 		y = (CmdHeight/2)-(CastleLength/4)-Ypos;
 		break;
-	case B_REG:
+	case 66:
 		x = CastleXStrt+CastleWidth+E.Distance-1;
 		y = (CmdHeight/2)-(CastleLength/4)-Ypos;
 		break;
-	case C_REG:
+	case 67:
 		x = CastleXStrt+CastleWidth+E.Distance-1;
 		y = (CmdHeight/2)+(CastleLength/4)+Ypos;
 		break;
