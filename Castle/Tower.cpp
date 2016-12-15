@@ -63,10 +63,12 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	// Getting rid of the' head pointer change'  cases
 	if(SHhead==NULL){
 		SHhead=SHfighter;
+		return;
 	}
 	if(SHhead->Priorty < SHfighter->Priorty){
 		SHfighter->next=SHhead;
 		SHhead=SHfighter;
+		return;
 	}
 	enemy* current=SHhead->next;
 	enemy* prev=SHhead;
@@ -83,6 +85,7 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	//existing the loop mean this enemy has the least priority , therefore 
 	//he should fall back behind
 	prev->next=SHfighter;
+	SHfighter->next=NULL;
 }
 //The function picks first N enemies to shoot for all tower at once
 //NO NEED TO CALL IT FOUR TIMES!!!!!!!!

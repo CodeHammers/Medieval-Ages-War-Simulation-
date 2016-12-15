@@ -73,6 +73,9 @@ struct enemy
 	int FirstShotTime;
 	int Hold;
 	enemy* next;      //pointer used for linked list construction
+	enemy(){
+		FirstShotTime=-1;
+	}
 };
 
 //Queue struct
