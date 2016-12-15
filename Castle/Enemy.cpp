@@ -220,6 +220,8 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 			SHfighters->Hold = SHfighters->ReloadPeriod;
 			SHfighters = SHfighters->next;
 		}
+		else
+			SHfighters = SHfighters->next;
 	}
 }
 
@@ -278,7 +280,7 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 
 void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 {
-	// Two possible solution 
+	// Two possible solutions
 	//  1 :  double * Arr= new double[4]();
 	//  2 : make sure the arr is intialized to zero
 	// used the 2nd solution to avoid changing parameter

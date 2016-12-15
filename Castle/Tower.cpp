@@ -63,6 +63,7 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	// Getting rid of the' head pointer change'  cases
 	if(SHhead==NULL){
 		SHhead=SHfighter;
+		SHfighter->next=NULL;
 		return;
 	}
 	if(SHhead->Priorty < SHfighter->Priorty){
@@ -105,12 +106,13 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, enemy* &DeadHe
 			i++;
 		}
 		while(regIterator!=NULL&&i< towers[j].TowerKillingCapacity){
-			if(SHiterator->FirstShotTime==-1)
-				SHiterator->FirstShotTime=timeStep;
+			if(regIterator->FirstShotTime==-1)
+				regIterator->FirstShotTime=timeStep;
 			regIterator->Health -=towers[j].TowerFirePower;
 			//call checks if dead
-			checkDead(regIterator,regHead,DeadHead,timeStep);
+			enemy* shotEnemy=regIterator; 
 			regIterator=regIterator->next;
+			checkDead(shotEnemy,regHead,DeadHead,timeStep);
 			i++;
 		}
 	}
