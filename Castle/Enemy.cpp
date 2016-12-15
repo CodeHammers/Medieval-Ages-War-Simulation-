@@ -351,30 +351,22 @@ void Pave(enemy* &ActiveH, castle &Castle)
 	{
 		if (!ptr->Reloading)
 		{
-			int ToBePaved = 0;
+			int UnPavedResult = 0;
 
 			if (ptr->Region == 65) {
-				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[0].UnpavedArea);
-				if (ToBePaved > 0 && ToBePaved <= Castle.towers[0].UnpavedArea)
-					Castle.towers[0].UnpavedArea -= ToBePaved;
+				getUnPavedAreaResult(Castle.towers[0],ptr);
 			}
 
 			else if (ptr->Region == 66) {
-				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[1].UnpavedArea);
-				if (ToBePaved > 0 && ToBePaved <= Castle.towers[1].UnpavedArea)
-					Castle.towers[1].UnpavedArea -= ToBePaved;
+				getUnPavedAreaResult(Castle.towers[1],ptr);
 			}
 
 			else if (ptr->Region == 67) {
-				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[2].UnpavedArea);
-				if (ToBePaved > 0 && ToBePaved <= Castle.towers[2].UnpavedArea)
-					Castle.towers[2].UnpavedArea -= ToBePaved;
+				getUnPavedAreaResult(Castle.towers[2],ptr);
 			}
 
 			else{
-				ToBePaved = ptr->FirePower - (ptr->Distance - Castle.towers[3].UnpavedArea);
-				if (ToBePaved > 0 && ToBePaved <= Castle.towers[3].UnpavedArea)
-					Castle.towers[3].UnpavedArea -= ToBePaved;
+				getUnPavedAreaResult(Castle.towers[3],ptr);
 			}
 
 			ptr->Hold = ptr->ReloadPeriod;
@@ -385,6 +377,14 @@ void Pave(enemy* &ActiveH, castle &Castle)
 			ptr->Distance--;
 		ptr = ptr->next;
 	}
+}
+void getUnPavedAreaResult(Tower t, enemy* e){
+	int UnPavedResult=  e->Distance - e->FirePower;
+	if(UnPavedResult<=0)
+		t.UnpavedArea=0;
+	else
+		if(t.UnpavedArea>UnPavedResult)
+			t.UnpavedArea = UnPavedResult;
 }
 
 bool IsPaved(enemy* Enemy, castle &Castle)

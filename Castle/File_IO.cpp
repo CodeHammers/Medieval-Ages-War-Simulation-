@@ -48,6 +48,7 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH)
 		Data->Type = Type;
 		Data->Region = Region;
 		Data->Distance = 60;
+		Data->FirstShotTime=-1;
 		/*The next few lines resemble the insertion logic, depending on the
 		the type specified in the input file, we insert pavers and regular
 		fighters in a queue, and we insert shielded fighters in a seprate queue*/
