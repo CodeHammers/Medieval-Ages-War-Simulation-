@@ -8,5 +8,5 @@
 void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH);
 
 //void OutputKilled(int FD, int KD, int FT, int KTS, int S);
-
+void OutputSimStatus(Statistics &stats, castle &Castle, char whoWon);
 void PrintTabs();

@@ -92,6 +92,8 @@ int main()
 	/* loop as long as we don't have any active regular enemies, nor shieled
 	active enemies, nor inactive regular enemies, nor inactive shielded enemies*/
 
+	//just for testing
+	OutputSimStatus(stats, ct, 'c');
 	//Printing the time taken for the simulation to finalize.
 	cout << endl << " Time taken : " << timestep - 1 << endl;
 

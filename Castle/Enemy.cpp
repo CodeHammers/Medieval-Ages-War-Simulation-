@@ -190,7 +190,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 	double damage = 0.0;
 	while (RegFigthers != NULL) {
 		if (RegFigthers->Type != PVR && !RegFigthers->Reloading) {
-			damage = (1 / RegFigthers->Distance)*RegFigthers->FirePower;
+			damage = (1.0 / RegFigthers->Distance)*(RegFigthers->FirePower);
 
 			if (RegFigthers->Region == 65)
 				Arr[0] += damage;
@@ -210,7 +210,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 
 	while (SHfighters != NULL) {
 		if (!SHfighters->Reloading) {
-			damage = (2 / SHfighters->Distance)*SHfighters->FirePower;
+			damage = (2.0 / SHfighters->Distance)*(SHfighters->FirePower);
 
 			if (SHfighters->Region == 65)
 				Arr[0] += damage;
@@ -237,24 +237,24 @@ void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH
 	enemy* inF = inACF.bounds.front, *inSF = inACSFH.bounds.front;
 
 	while (inF != NULL) {
-		inF->Region = (REGION)Nregion;
+		inF->Region = (REGION)(65+Nregion);
 		inF = inF->next;
 	}
 
 	while (inSF != NULL) {
-		inSF->Region = (REGION)Nregion;
+		inSF->Region = (REGION)(65 + Nregion);
 		inSF = inSF->next;
 	}
 	
 	while (AF != NULL) {
-		AF->Region = (REGION)Nregion;
+		AF->Region = (REGION)(65 + Nregion);
 		if (AF->Distance < Castle.towers[Nregion].UnpavedArea)
 			AF->Distance = Castle.towers[Nregion].UnpavedArea;
 		AF = AF->next;
 	}
 
 	while (ASF != NULL) {
-		ASF->Region = (REGION)Nregion;
+		ASF->Region = (REGION)(65 + Nregion);
 		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea)
 			ASF->Distance = Castle.towers[Nregion].UnpavedArea;
 		ASF = ASF->next;

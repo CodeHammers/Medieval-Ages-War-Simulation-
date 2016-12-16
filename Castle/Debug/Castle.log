@@ -1,4 +1,5 @@
 ﻿  Enemy.cpp
 f:\ds project local\ds-project-2016\castle\enemy.cpp(392): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
   Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)
