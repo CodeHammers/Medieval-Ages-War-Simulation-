@@ -298,14 +298,12 @@ void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 
 void OutputKilled(int FD, int KD, int FT, int KTS, int S,ofstream &out)
 {
-	out.open("output.txt", ios::app);
 	out << left << setw(5) << setfill(' ') << KTS << " ";
 	out << left << setw(5) << setfill(' ') << S << " ";
 	out << left << setw(5) << setfill(' ') << FD << " ";
 	out << left << setw(5) << setfill(' ') << KD << " ";
 	out << left << setw(5) << setfill(' ') << FT << " ";
 	out << endl;
-	out.close();
 }
 
 

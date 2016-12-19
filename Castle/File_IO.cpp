@@ -75,9 +75,7 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 
 void PrintTabs(ofstream &out)
 {
-	out.open("output.txt", ios::app);
 	cout << "KTS     S     FD     KD     FT" << endl;
-	out.close();
 }
 
 
@@ -95,7 +93,6 @@ void PrintTabs(ofstream &out)
 
 void OutputSimStatus(Statistics &stats,castle &Castle, char whoWon,ofstream &out)
 {
-	out.open("output.txt", ios::app);
 
 	out << "T1_Total_Damage      T2_Total_Damage      T3_Total_Damage      T4_Total_Damage" << endl;
 	out << "   " << stats.Tower_intialHealth - Castle.towers[0].Health;
@@ -125,5 +122,4 @@ void OutputSimStatus(Statistics &stats,castle &Castle, char whoWon,ofstream &out
 		out << "Avarage Kill Delay : " << (double)stats.KillDelay / (double)stats.Total_killed << endl;
 	}
 	out << "END OF SIMULATION" << endl;
-	out.close();
 }

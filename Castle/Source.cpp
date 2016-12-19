@@ -8,8 +8,10 @@ int main()
 	stats.FightDelay = 0, stats.KillDelay = 0, stats.Total_active = 0, stats.lastKilled = 0;
 	stats.Total_inactive = 0, stats.Total_killed = 0, stats.Tower_intialHealth = 0;
 
-	ofstream out("output.txt", ios::out);
-	PrintTabs(out);
+	ofstream out;
+	
+	//out.clear();
+	//PrintTabs(out);
 	char won = ' '; bool CastleDestroyed = false;
 
 	ct.Xstrt = CastleXStrt;
@@ -47,7 +49,7 @@ int main()
 	cout << "Enter 2 for silent mode" << endl;
 	cin >> mode;
 	//ct.towers[1].Health = 0;
-
+	out.open("output.txt", ios::app);
 	//execute at least once.
 	do
 	{
@@ -113,7 +115,9 @@ int main()
 	active enemies, nor inactive regular enemies, nor inactive shielded enemies*/
 
 	//just for testing
-	OutputSimStatus(stats,ct, won,out);
+	//OutputSimStatus(stats,ct, won,out);
+	out.close();
+	cin.get();
 	//Printing the time taken for the simulation to finalize.
 	cout << endl << " Time taken : " << timestep - 1 << endl;
 
