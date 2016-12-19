@@ -6,7 +6,7 @@ bool IsEmpty(Queue &queue)
 }
 
 
-void Enqueue(Queue &queue, enemy* &data)
+void Enqueue(Queue &queue, enemy* &data,Statistics &stats)
 {
 	if (IsEmpty(queue))   //handling the case of an empty queue.
 		queue.bounds.front = queue.bounds.rear = data;
@@ -15,4 +15,5 @@ void Enqueue(Queue &queue, enemy* &data)
 		queue.bounds.rear = data;
 	}
 	data->next = NULL;
+	stats.Total_inactive++;
 }

@@ -1,0 +1,10 @@
+4     4     0     1     1     
+T1_Total_Damage      T2_Total_Damage      T3_Total_Damage      T4_Total_Damage
+   1   1   1   1
+
+R1_Distance      R2_Distance      R3_Distance      R4_Distance
+  30  30  30  30Number of Killed Enemies : 1
+Number of Alive Enemies : 43
+Avarage Figth Delay : 0
+Avarage Kill Delay : 1
+END OF SIMULATION

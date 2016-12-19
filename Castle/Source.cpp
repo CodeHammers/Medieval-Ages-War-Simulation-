@@ -4,14 +4,19 @@ int main()
 {
 	SetWindow();	//adjust game window settings
 	castle ct;      // define a castle 
-	Statistics stats; 
+	Statistics stats;
+	stats.FightDelay = 0, stats.KillDelay = 0, stats.Total_active = 0, stats.lastKilled = 0;
+	stats.Total_inactive = 0, stats.Total_killed = 0, stats.Tower_intialHealth = 0;
+
 	ofstream out("output.txt", ios::out);
+	PrintTabs(out);
+	char won = ' '; bool CastleDestroyed = false;
 
 	ct.Xstrt = CastleXStrt;
 	ct.Ystrt = CastleYStrt;
 	ct.W = CastleWidth;
 	ct.L = CastleLength;
-	
+
 	//Intializing the number of active regular enemies and the number of killed.
 	int RegSize = 0, SHsize = 0, NumKilled = 0;
 
@@ -28,14 +33,20 @@ int main()
 	enemy* DeadHead = NULL;   //Intializing the dead enemies list.
 
 	double Constants[3];     //creating an array to store constants.
-   
-	//calling the load file function to extract data from the input file.
-	LoadFile(Constants, ct, in_regFigthersHead, in_SHFighterHead);
 
+	//calling the load file function to extract data from the input file.
+	LoadFile(Constants, ct, in_regFigthersHead, in_SHFighterHead, stats);
 
 
 	//Intializing the time step counter to 1.
-	int timestep = 1;
+	int timestep = 1, mode = 0;
+
+	cout << "In what mode you want to run the simulation " << endl;
+	cout << "Enter 0 for interactive mode" << endl;
+	cout << "Enter 1 for step-by-step mode" << endl;
+	cout << "Enter 2 for silent mode" << endl;
+	cin >> mode;
+	//ct.towers[1].Health = 0;
 
 	//execute at least once.
 	do
@@ -45,6 +56,8 @@ int main()
 
 		//Activate all shielded enemies with an arrival time matching the timestep.
 		Activate(in_SHFighterHead, ac_SHFighterHead, timestep, SHsize);
+
+		stats.Total_active = SHsize + RegSize;
 
 		CheckReloadingEnemies(ac_regFigthersHead, ac_SHFighterHead);
 
@@ -57,43 +70,50 @@ int main()
 		}
 
 		itr = ac_regFigthersHead;
-		for (int i = SHsize ; i < RegSize+SHsize ; i++) {
+		for (int i = SHsize; i < RegSize + SHsize; i++) {
 			enemies[i] = itr;
 			itr = itr->next;
 		}
 
-		DrawCastle(ct, timestep);
-		DrawEnemies(enemies, SHsize + RegSize);
-
+		if (mode != 2) {
+			DrawCastle(ct, timestep, stats);
+			DrawEnemies(enemies, stats.Total_active);
+		}
 		DeadHead = NULL;
 
 		//Enemies Shoot the castle
 		EnemyShoot(ac_regFigthersHead, ac_SHFighterHead, in_regFigthersHead, in_SHFighterHead, ct);
 
 		//Castle Shoots Enemies
-		TowerShoot(ac_SHFighterHead, Constants,ac_regFigthersHead,
-			DeadHead,timestep,ct.towers,RegSize,SHsize);
+		TowerShoot(ac_SHFighterHead, Constants, ac_regFigthersHead,
+			DeadHead, timestep, ct.towers, RegSize, SHsize, stats);
 
 		//pavers pave if possible  
-		Pave(ac_regFigthersHead,ct);
+		Pave(ac_regFigthersHead, ct);
 
 		//Enemies move
-		MoveEnemies(ac_regFigthersHead,ac_SHFighterHead,ct);
+		MoveEnemies(ac_regFigthersHead, ac_SHFighterHead, ct);
 
 		CollectStatistics(DeadHead, stats, out);
 
+		WhoWon(ct, won, CastleDestroyed);
+
+		stats.lastKilled = 0;
+
 		timestep++; //incrementing the timestep by one. 
+		if (mode == 0)
+			Sleep(1000);
+		else if(mode == 1)
+			cin.get();
 
-		Sleep(1000);
-
-	} while (!(ac_regFigthersHead == NULL&&ac_SHFighterHead == NULL
+	} while (!((ac_regFigthersHead == NULL&&ac_SHFighterHead == NULL
 		&&in_regFigthersHead.bounds.front == NULL
-		&&in_SHFighterHead.bounds.front == NULL));
+		&&in_SHFighterHead.bounds.front == NULL) || CastleDestroyed));
 	/* loop as long as we don't have any active regular enemies, nor shieled
 	active enemies, nor inactive regular enemies, nor inactive shielded enemies*/
 
 	//just for testing
-	OutputSimStatus(stats, ct, 'c');
+	OutputSimStatus(stats,ct, won,out);
 	//Printing the time taken for the simulation to finalize.
 	cout << endl << " Time taken : " << timestep - 1 << endl;
 

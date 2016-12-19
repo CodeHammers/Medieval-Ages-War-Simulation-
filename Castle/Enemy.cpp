@@ -268,6 +268,7 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 		Castle.towers[i].Health -= Arr[i];
 		if (Castle.towers[i].Health <= 0) {
 			Castle.towers[i].Destroyed = true;
+			Castle.towers[i].Health = 0;
 
 			int newRegion = (i + 1) % 4;
 			for (int i = 0; i < 3; i++) {
@@ -304,6 +305,7 @@ void OutputKilled(int FD, int KD, int FT, int KTS, int S,ofstream &out)
 	out << left << setw(5) << setfill(' ') << KD << " ";
 	out << left << setw(5) << setfill(' ') << FT << " ";
 	out << endl;
+	out.close();
 }
 
 
@@ -381,7 +383,7 @@ void Pave(enemy* &ActiveH, castle &Castle)
 		}
 
 		if (ptr->Distance>2)
-			ptr->Distance--;
+			ptr->Distance-=3;
 
 		ptr = ptr->next;
 	}
@@ -433,7 +435,7 @@ void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
 	{
 		if (ptr->Type != PVR && ptr->Distance>2)
 			if (IsPaved(ptr, Castle))
-				ptr->Distance--;
+				ptr->Distance-=2;
 		ptr = ptr->next;
 	}
 

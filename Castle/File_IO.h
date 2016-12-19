@@ -5,8 +5,8 @@
 #include "EnemyAndTower.h"
 
 /*A function to load the input file and extract data*/
-void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH);
+void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &stats);
 
 //void OutputKilled(int FD, int KD, int FT, int KTS, int S);
-void OutputSimStatus(Statistics &stats, castle &Castle, char whoWon);
-void PrintTabs();
+void OutputSimStatus(Statistics &stats, castle &Castle, char whoWon,ofstream &out);
+void PrintTabs(ofstream &out);

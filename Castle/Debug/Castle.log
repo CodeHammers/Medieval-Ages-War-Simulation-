@@ -1,12 +1,8 @@
-﻿  utility.cpp
-  Tower.cpp
-  Source.cpp
-  Queue.cpp
-  File_IO.cpp
+﻿  File_IO.cpp
+f:\ds project local\ds-project-2016\castle\file_io.cpp(27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Enemy.cpp
-f:\ds project local\ds-project-2016\castle\enemy.cpp(392): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+f:\ds project local\ds-project-2016\castle\enemy.cpp(394): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Generating Code...
-  LINK : F:\DS project local\DS-project-2016\Debug\Castle.exe not found or not built by the last incremental link; performing full link
 Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
   Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
   Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)

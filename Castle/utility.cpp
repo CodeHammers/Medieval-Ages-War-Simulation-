@@ -49,7 +49,7 @@ void DrawRegions(const castle & C)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 /*A function to draw the castle and the towers*/
-void DrawCastle(const castle & C,int SimulationTime)
+void DrawCastle(const castle & C,int SimulationTime,Statistics &stats)
 {
 	system("CLS");
 	
@@ -133,6 +133,15 @@ void DrawCastle(const castle & C,int SimulationTime)
 	//****************************
 	gotoxy(CmdWidth/2 -10, CmdHeight-1);
 	cout<<"Simulation Time : " << SimulationTime<<endl;
+	/*cout << "Total number of Active enemies : " << stats.Total_active << endl;
+	cout << "Total number of killed enemies : " << stats.Total_killed << endl;
+	cout << "Number of enemies killed in the last timestep : " << stats.lastKilled << endl;
+	
+	int name = 65;
+	for (int i = 0; i < 4; i++) {
+		cout << "UnpavedArea in region " << char(name) << " : " << C.towers[i].UnpavedArea << endl;
+		name++;
+	}*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

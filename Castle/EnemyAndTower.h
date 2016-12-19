@@ -5,10 +5,10 @@
 using namespace std;
 
 /*A function to insert a tower node into the towers list*/
-bool InsertTower(Tower* &towerH, double TH, int TKC , double FP);
+//bool InsertTower(Tower* &towerH, double TH, int TKC , double FP);
 
 /*A function to enqueue an enemy in the queue*/
-void Enqueue(Queue &queue, enemy* &data);
+void Enqueue(Queue &queue, enemy* &data,Statistics &stats);
 
 /*A function to check if the queue is empty or not*/
 bool IsEmpty(Queue &queue);
@@ -42,10 +42,10 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter);
 
 /*picks N enemies for each tower and shoots them */
 void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, 
-				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize);
+				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize,Statistics &stats);
 
 /* moves shotEnemy to dead list (if health <= zero) + gathering statistics */
-void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead,int timeStep,int &size);
+void checkDead(enemy* shotEnemy, enemy * &activeHead, enemy* &DeadHead,int timeStep,int &size,Statistics& stats);
 
 void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters, double* Arr);
 
@@ -70,6 +70,9 @@ bool IsPaved(enemy* Enemy, castle &Castle);
 void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle);
 
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
-				, enemy* &DeadHead,int timeStep,Tower towers[4],int &RegSize,int &SHsize);
+				, enemy* &DeadHead,int timeStep,Tower towers[4],
+	            int &RegSize,int &SHsize,Statistics &stats);
 
 void getUnPavedAreaResult(Tower t, enemy *e );
+
+void WhoWon(castle &ct, char& flag, bool& CastleDestroyed);

@@ -91,7 +91,7 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 //The function picks first N enemies to shoot for all tower at once
 //NO NEED TO CALL IT FOUR TIMES!!!!!!!!
 void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, 
-				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize)
+				  enemy* &DeadHead,int timeStep,int &RegSize, int &SHsize,Statistics &stats)
 {
 	enemy* SHiterator=SHhead;
 	enemy* regIterator=regHead;
@@ -100,7 +100,7 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 	for(int k=0;k<4;k++){
 		int i = 0; SHiterator = SHhead, regIterator = regHead;
 
-		while(SHiterator!=NULL && i< towers[k].TowerKillingCapacity){
+		while(SHiterator!=NULL && i< towers[k].TowerKillingCapacity && !towers[i].Destroyed){
 			if(SHiterator->Region==65+k){
 				if(SHiterator->FirstShotTime==-1)
 					SHiterator->FirstShotTime=timeStep;
@@ -110,14 +110,14 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 				//call checks if dead
 				shotEnemy=SHiterator; 
 				SHiterator = SHiterator->next;
-				checkDead(shotEnemy,SHhead,DeadHead,timeStep,SHsize);
+				checkDead(shotEnemy,SHhead,DeadHead,timeStep,SHsize,stats);
 				i++; 
 			}
 			else 
 				SHiterator = SHiterator->next;
 		}
 
-		while(regIterator!=NULL && i< towers[k].TowerKillingCapacity){
+		while(regIterator!=NULL && i< towers[k].TowerKillingCapacity && !towers[i].Destroyed){
 			if(regIterator->Region==65+k){
 				if(regIterator->FirstShotTime==-1)
 					regIterator->FirstShotTime=timeStep;
@@ -126,7 +126,7 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 				//call checks if dead
 				shotEnemy=regIterator; 
 				regIterator = regIterator->next;
-				checkDead(shotEnemy,regHead,DeadHead,timeStep,RegSize);
+				checkDead(shotEnemy,regHead,DeadHead,timeStep,RegSize,stats);
 				i++;
 			}
 			else
@@ -135,12 +135,14 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 	}
 }
 
-void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeStep,int &size)
+void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeStep,int &size,Statistics &stats)
 {
 	if(shotEnemy->Health<=0){
 		size--;
+		stats.Total_killed++; stats.lastKilled++;
 		//preparing to die , gathering statistics
 		shotEnemy->DeathTime=timeStep;
+		shotEnemy->Health = 0;
 		DetachEnemy(shotEnemy, activeHead);
 		//Die,Dog!
 		Kill(shotEnemy, DeadHead);
@@ -148,7 +150,23 @@ void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeSte
 }
 
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead, enemy* &DeadHead
-				,int timeStep,Tower towers[4],int &RegSize,int &SHsize){
+				,int timeStep,Tower towers[4],int &RegSize,int &SHsize,Statistics &stats){
 	UpdatePriority(SHhead,Constants);
-	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep,RegSize,SHsize);
+	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep,RegSize,SHsize,stats);
+}
+
+void WhoWon(castle &ct,char& flag,bool& CastleDestroyed)
+{
+	int counter = 0; 
+	for (int i = 0; i < 4; i++) {
+		if (ct.towers[i].Destroyed)
+			counter++;
+	}
+	if (counter == 4) {
+		CastleDestroyed = true;
+		flag = 'E';
+	}
+	else {
+		flag = 'C';
+	}
 }

@@ -93,6 +93,7 @@ struct Statistics
 	int Total_inactive;
 	int Total_active;
 	int Total_killed;
+	int lastKilled;
 	int FightDelay;
 	int KillDelay;
 	int Tower_intialHealth;
@@ -114,7 +115,7 @@ void color(int thecolor);
 void DrawRegions(const castle & C);
 
 /*A function to draw the castle and the towers*/
-void DrawCastle(const castle & C,int SimulationTime);
+void DrawCastle(const castle & C,int SimulationTime,Statistics &stats);
 
 /*A function to draw a single enemy using its distance from the castle*/
 void DrawEnemy(const enemy& E, int Ypos=0);
