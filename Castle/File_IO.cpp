@@ -75,7 +75,7 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 
 void PrintTabs(ofstream &out)
 {
-	cout << "KTS     S     FD     KD     FT" << endl;
+	out << "KTS   S       FD     KD     FT" << endl;
 }
 
 
