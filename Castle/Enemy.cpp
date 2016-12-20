@@ -11,7 +11,9 @@ void Kill(enemy* killed, enemy* &DeadH)
 		int count = 0;
 
 		while (current != NULL) {
-			if (current->Health < killed->Health) { //sorting in ascedning order.
+			int currentFD = current->FirstShotTime - current->ArrivalTime;
+			int killedFD =  killed->FirstShotTime - killed->ArrivalTime;
+			if (currentFD < currentFD) { //sorting in ascedning order.
 				prev = current; 
 				current = current->next;
 				count++;
