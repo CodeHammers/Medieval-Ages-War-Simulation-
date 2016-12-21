@@ -133,7 +133,7 @@ void DrawCastle(const castle & C,int SimulationTime,Statistics &stats)
 	//****************************
 	gotoxy(CmdWidth/2 -10, CmdHeight-1);
 	cout<<"Simulation Time : " << SimulationTime<<endl;
-	/*cout << "Total number of Active enemies : " << stats.Total_active << endl;
+	cout << "Total number of Active enemies : " << stats.Total_active << endl;
 	cout << "Total number of killed enemies : " << stats.Total_killed << endl;
 	cout << "Number of enemies killed in the last timestep : " << stats.lastKilled << endl;
 	
@@ -141,7 +141,7 @@ void DrawCastle(const castle & C,int SimulationTime,Statistics &stats)
 	for (int i = 0; i < 4; i++) {
 		cout << "UnpavedArea in region " << char(name) << " : " << C.towers[i].UnpavedArea << endl;
 		name++;
-	}*/
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
