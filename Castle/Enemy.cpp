@@ -389,7 +389,7 @@ void Pave(enemy* &ActiveH, castle &Castle)
 	}
 }
 
-void getUnPavedAreaResult(Tower t, enemy* e)
+void getUnPavedAreaResult(Tower &t, enemy* e)
 {
 	int UnPavedResult=  e->Distance - e->FirePower;
 

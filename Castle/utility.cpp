@@ -16,7 +16,7 @@ void gotoxy(int x, int y)
 /*A function to set the command window lenght and height for the game specification*/
 void SetWindow()
 {
-	system("mode 150,50");   //Set mode to ensure window does not exceed buffer size
+	system("mode 200,100");   //Set mode to ensure window does not exceed buffer size
 	SMALL_RECT WinRect = {0, 0, CmdWidth, CmdHeight};   //New dimensions for window in 8x12 pixel chars
 	SMALL_RECT* WinSize = &WinRect;
 	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), true, WinSize);   //Set new size for window

@@ -73,6 +73,6 @@ void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
 				, enemy* &DeadHead,int timeStep,Tower towers[4],
 	            int &RegSize,int &SHsize,Statistics &stats);
 
-void getUnPavedAreaResult(Tower t, enemy *e );
+void getUnPavedAreaResult(Tower &t, enemy *e );
 
 void WhoWon(castle &ct, char& flag, bool& CastleDestroyed);
