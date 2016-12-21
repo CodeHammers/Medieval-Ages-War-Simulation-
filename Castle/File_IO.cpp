@@ -55,6 +55,7 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 		Data->DeathTime = 0;
 		Data->Reloading = false;
 		Data->Priorty = 0.0;
+		Data->speed = 1;//to be added in input file
 		/*The next few lines resemble the insertion logic, depending on the
 		the type specified in the input file, we insert pavers and regular
 		fighters in a queue, and we insert shielded fighters in a seprate queue*/

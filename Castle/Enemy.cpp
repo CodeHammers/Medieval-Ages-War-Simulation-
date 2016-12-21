@@ -382,8 +382,8 @@ void Pave(enemy* &ActiveH, castle &Castle)
 			ptr->Reloading = true;
 		}
 
-		if (ptr->Distance>2)
-			ptr->Distance-=3;
+		if (ptr->Distance>1+ptr->speed)
+			ptr->Distance-=ptr->speed;
 
 		ptr = ptr->next;
 	}
@@ -434,16 +434,17 @@ void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
 	while (ptr != NULL)
 	{
 		if (ptr->Type != PVR && ptr->Distance>2)
+		
 			if (IsPaved(ptr, Castle))
-				ptr->Distance-=2;
+				ptr->Distance--;
 		ptr = ptr->next;
 	}
 
 	while (ptr2 != NULL)
 	{
-		if (ptr2->Distance > 2)
+		if (ptr2->Distance > 1+ptr2->speed)
 			if (IsPaved(ptr2, Castle))
-				ptr2->Distance--;
+				ptr2->Distance-=ptr2->speed;
 		ptr2 = ptr2->next;
 	}
 }

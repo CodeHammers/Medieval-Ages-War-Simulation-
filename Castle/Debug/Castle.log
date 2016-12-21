@@ -1,3 +1,4 @@
-﻿  utility.cpp
+﻿  Enemy.cpp
+d:\software_development\ds-project-2016\castle\enemy.cpp(394): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.exe
   Castle.vcxproj -> D:\Software_Development\DS-project-2016\Debug\Castle.pdb (Full PDB)

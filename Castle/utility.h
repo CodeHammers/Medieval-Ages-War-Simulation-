@@ -71,6 +71,7 @@ struct enemy
 	int DeathTime;
 	int FirstShotTime;
 	int Hold;
+	int speed;
 	enemy* next;      //pointer used for linked list construction
 };
 
