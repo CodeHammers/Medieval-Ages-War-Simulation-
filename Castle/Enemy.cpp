@@ -13,7 +13,7 @@ void Kill(enemy* killed, enemy* &DeadH)
 		while (current != NULL) {
 			int currentFD = current->FirstShotTime - current->ArrivalTime;
 			int killedFD =  killed->FirstShotTime - killed->ArrivalTime;
-			if (currentFD < currentFD) { //sorting in ascedning order.
+			if (currentFD < killedFD) { //sorting in ascedning order.
 				prev = current; 
 				current = current->next;
 				count++;
@@ -37,7 +37,7 @@ void Kill(enemy* killed, enemy* &DeadH)
 	}
 }
 
-
+//The following functions are not used in phase 2, yet we decided to keep them.----
 enemy* SearchEnemy(enemy* ActiveHead, int index)
 {
 	int i = 1; 
@@ -102,7 +102,7 @@ void printRegion(enemy * list, int region)
 		list = list->next;
 	}
 }
-
+//---------------------------------------------------------------------------------
 
 void MoveFromTo(enemy* &origin, enemy* &destination)
 {
@@ -124,7 +124,7 @@ void MoveFromTo(enemy* &origin, enemy* &destination)
 }
 
 
-void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter)
+void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter,Statistics &stats)
 {
 	enemy* current = inactiveH.bounds.front;
 	enemy* prev = NULL; enemy* temp = NULL; int count = 0, i = 0;
@@ -154,8 +154,7 @@ void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter)
 
 			temp = current->next;
 			MoveFromTo(current, activeH);   //Activation enemies.
-			counter++;
-			//arr[i]=&
+			counter++; stats.Total_inactive--;
 			current = temp;   //updating current.
 		}	
 	}
@@ -192,8 +191,10 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 	double damage = 0.0;
 	while (RegFigthers != NULL) {
 		if (RegFigthers->Type != PVR && !RegFigthers->Reloading) {
+			//calc. damage.
 			damage = (1.0 / RegFigthers->Distance)*(RegFigthers->FirePower);
 
+			//accumulate damage.
 			if (RegFigthers->Region == 65)
 				Arr[0] += damage;
 			else if (RegFigthers->Region == 66)
@@ -203,8 +204,8 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 			else
 				Arr[3] += damage;
 
-			RegFigthers->Reloading = true;
-			RegFigthers->Hold = RegFigthers->ReloadPeriod;
+			RegFigthers->Reloading = true;   //set the enemy who made a shot as reloading.
+			RegFigthers->Hold = RegFigthers->ReloadPeriod; //for a period equals the reload prd.
 		}
 		else 
 			RegFigthers = RegFigthers->next;
@@ -212,8 +213,10 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 
 	while (SHfighters != NULL) {
 		if (!SHfighters->Reloading) {
+			//calc. damage.
 			damage = (2.0 / SHfighters->Distance)*(SHfighters->FirePower);
 
+			//accumulate damage.
 			if (SHfighters->Region == 65)
 				Arr[0] += damage;
 			else if (SHfighters->Region == 66)
@@ -223,8 +226,8 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 			else
 				Arr[3] += damage;
 
-			SHfighters->Reloading = true;
-			SHfighters->Hold = SHfighters->ReloadPeriod;
+			SHfighters->Reloading = true;  //set the enemy who made a shot as reloading.
+			SHfighters->Hold = SHfighters->ReloadPeriod;  //for a period equals the reload prd.
 			SHfighters = SHfighters->next;
 		}
 		else
@@ -238,26 +241,28 @@ void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH
 	enemy* AF = ActiveF, *ASF = ActiveSF;
 	enemy* inF = inACF.bounds.front, *inSF = inACSFH.bounds.front;
 
+	//For all inactive enemies.
 	while (inF != NULL) {
-		inF->Region = (REGION)(65+Nregion);
+		inF->Region = (REGION)(65+Nregion); //change the region in a clockwise manner.
 		inF = inF->next;
 	}
 
 	while (inSF != NULL) {
-		inSF->Region = (REGION)(65 + Nregion);
+		inSF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
 		inSF = inSF->next;
 	}
 	
+	//For all active enemies.
 	while (AF != NULL) {
-		AF->Region = (REGION)(65 + Nregion);
-		if (AF->Distance < Castle.towers[Nregion].UnpavedArea)
+		AF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+		if (AF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
 			AF->Distance = Castle.towers[Nregion].UnpavedArea;
 		AF = AF->next;
 	}
 
 	while (ASF != NULL) {
-		ASF->Region = (REGION)(65 + Nregion);
-		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea)
+		ASF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
 			ASF->Distance = Castle.towers[Nregion].UnpavedArea;
 		ASF = ASF->next;
 	}
@@ -272,32 +277,29 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 			Castle.towers[i].Destroyed = true;
 			Castle.towers[i].Health = 0;
 
-			int newRegion = (i + 1) % 4;
+			int newRegion = (i + 1) % 4;  //determine the next region to move to in a circular manner.
 			for (int i = 0; i < 3; i++) {
-				if (Castle.towers[newRegion].Destroyed)
-					newRegion++;
+				if (Castle.towers[newRegion].Destroyed) //checks if the next tower is destoryed or not.
+					newRegion++;  //if true, checks the next tower.
 				else
-					break;
+					break;  //if false, breaks.
 			}
 
+			//reloacting enemies.
 			RelocateEnemies(ActiveF, ActiveSF, inACF, inACSFH, newRegion,Castle);
 		}
 	}
 }
 
-
+//Collective function that calls other minor functions for simplicity when calling in main.
 void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 {
-	// Two possible solutions
-	//  1 :  double * Arr= new double[4]();
-	//  2 : make sure the arr is intialized to zero
-	// used the 2nd solution to avoid changing parameter
-	double Arr[4];
-	Arr[0]=0;Arr[1]=0;Arr[2]=0;Arr[3]=0;
+	double Arr[4]{ 0 };
 	EnemyToTowerDamage(AF, ASF,Arr);
 	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
 }
 
+//outputs the killed enemy data before deleting.
 void OutputKilled(int FD, int KD, int FT, int KTS, int S,ofstream &out)
 {
 	out << left << setw(8) << setfill(' ') << KTS << " ";
@@ -308,10 +310,11 @@ void OutputKilled(int FD, int KD, int FT, int KTS, int S,ofstream &out)
 	out << endl;
 }
 
-
+//collecting stats and permementaly delete killed enemies and frees memory.
 void CollectStatistics(enemy* DeadHead,Statistics &stats,ofstream &out)
 {
 	int FD, KD, FT; enemy* ToBeDeleted = NULL;
+
 	while (DeadHead != NULL) {
 		FD = DeadHead->FirstShotTime - DeadHead->ArrivalTime;
 		KD = DeadHead->DeathTime - DeadHead->FirstShotTime;
@@ -332,20 +335,20 @@ void CheckReloadingEnemies(enemy* &ACF, enemy* &ACSF)
 
 	while (it_ACF != NULL) {
 		if (it_ACF->Reloading) {
-			if (it_ACF->Hold == 0)
+			if (it_ACF->Hold == 0)  //if the reloading period ended, reactivate enemy.
 				it_ACF->Reloading = false;
 			else
-				it_ACF->Hold--;
+				it_ACF->Hold--;  //if not, decrement hold by one.
 		}
 		it_ACF = it_ACF->next;
 	}
 
 	while (it_ACSF != NULL) {
 		if (it_ACSF->Reloading) {
-			if (it_ACSF->Hold == 0)
+			if (it_ACSF->Hold == 0)  //if the reloading period ended, reactivate enemy.
 				it_ACSF->Reloading = false;
 			else
-				it_ACSF->Hold--;
+				it_ACSF->Hold--;  //if not, decrement hold by one.
 		}
 		it_ACSF = it_ACSF->next;
 	}
@@ -358,7 +361,7 @@ void Pave(enemy* &ActiveH, castle &Castle)
 
 	while (ptr != NULL)
 	{
-		if (ptr->Type == PVR && !ptr->Reloading)
+		if (ptr->Type == PVR && !ptr->Reloading) //only paves if non-reloading active PVR
 		{
 			int UnPavedResult = 0;
 
@@ -382,24 +385,23 @@ void Pave(enemy* &ActiveH, castle &Castle)
 			ptr->Reloading = true;
 		}
 
-		if (ptr->Distance>1+ptr->speed)
-			ptr->Distance-=ptr->speed;
-
 		ptr = ptr->next;
 	}
 }
 
+//calculates the unpaved area in the tower after the paver paves.
 void getUnPavedAreaResult(Tower &t, enemy* e)
 {
-	int UnPavedResult=  e->Distance - e->FirePower;
+	int UnPavedResult=  e->Distance - (int)e->FirePower;
 
 	if(UnPavedResult<=0)
 		t.UnpavedArea=0;
 	else
 		if(t.UnpavedArea>UnPavedResult)
-			t.UnpavedArea -= UnPavedResult;
+			t.UnpavedArea = UnPavedResult;
 }
 
+//checks whether the movement range is paved or not.
 bool IsPaved(enemy* Enemy, castle &Castle)
 {
 	if (Enemy->Region == 65) {
@@ -425,7 +427,7 @@ bool IsPaved(enemy* Enemy, castle &Castle)
 	return false;
 }
 
-
+//moves enemies according to their speeds.
 void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
 {
 	enemy*ptr = ActiveH;
@@ -433,10 +435,10 @@ void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
 
 	while (ptr != NULL)
 	{
-		if (ptr->Type != PVR && ptr->Distance>2)
-		
+		if (ptr->Distance > 1+ptr->speed)
 			if (IsPaved(ptr, Castle))
-				ptr->Distance--;
+				ptr->Distance-=ptr->speed;
+
 		ptr = ptr->next;
 	}
 

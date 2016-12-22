@@ -2,7 +2,7 @@
 
 void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &stats)
 {
-	int Index, T, ArrivalTime, ReloadPeriod, TowerHit;
+	int Index, T, ArrivalTime, ReloadPeriod, TowerHit, EnemySpeed;
 	double Health, FirePower, TowerHealth, TowerFireP; char R;
 	Etype Type; REGION Region;
 
@@ -35,12 +35,13 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 	input >> Index; 
 	while (Index != -1) {
 
-		input>>T >> ArrivalTime >> Health >> FirePower >> ReloadPeriod >> R;
+		input>>T >> ArrivalTime >> Health >> FirePower >> ReloadPeriod>>EnemySpeed>> R;
 		
 		Type = static_cast<Etype>(T);     //converting int to enemy enum type.
 		Region = static_cast<REGION>(R);  //converting char to region enum type, stores ASCII. 
 
 		enemy* Data = new enemy;  //Allocating memory for a new enemy node.
+
 		//Filling data into the enemy node.
 		Data->ID = Index;
 		Data->ArrivalTime = ArrivalTime;
@@ -55,7 +56,8 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 		Data->DeathTime = 0;
 		Data->Reloading = false;
 		Data->Priorty = 0.0;
-		Data->speed = 1;//to be added in input file
+		Data->speed = EnemySpeed;
+
 		/*The next few lines resemble the insertion logic, depending on the
 		the type specified in the input file, we insert pavers and regular
 		fighters in a queue, and we insert shielded fighters in a seprate queue*/
@@ -73,54 +75,41 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 	input.close();
 }
 
-
+//Prints the needed tabs in the output file.
 void PrintTabs(ofstream &out)
 {
-	out << "KTS   S       FD     KD     FT" << endl;
+	out << "KTS      S        FD       KD       FT" << endl;
 }
 
-
-//void OutputKilled(int FD, int KD, int FT,int KTS, int S)
-//{
-//	ofstream out("output.txt", ios::app);
-//	out << left << setw(5) << setfill(' ') << KTS << " ";
-//	out << left << setw(5) << setfill(' ') << S   << " ";
-//	out << left << setw(5) << setfill(' ') << FD  << " ";
-//	out << left << setw(5) << setfill(' ') << KD  << " ";
-//	out << left << setw(5) << setfill(' ') << FT  << " ";
-//	out << endl;
-//}
-
-
+//outputing status in the output file.
 void OutputSimStatus(Statistics &stats,castle &Castle, char whoWon,ofstream &out)
 {
-
-	out << "T1_Total_Damage      T2_Total_Damage      T3_Total_Damage      T4_Total_Damage" << endl;
-	out << "   " << stats.Tower_intialHealth - Castle.towers[0].Health;
-	out << "   " << stats.Tower_intialHealth - Castle.towers[1].Health;
-	out << "   " << stats.Tower_intialHealth - Castle.towers[2].Health;
-	out << "   " << stats.Tower_intialHealth - Castle.towers[3].Health;
 	out << endl << endl;
 
-	out << "R1_Distance      R2_Distance      R3_Distance      R4_Distance" << endl;
-	out << "  " << Castle.towers[0].UnpavedArea;
-	out << "  " << Castle.towers[1].UnpavedArea;
-	out << "  " << Castle.towers[2].UnpavedArea;
-	out << "  " << Castle.towers[3].UnpavedArea;
-	cout << endl << endl;
+	out << "T1_Total_Damage :" << stats.Tower_intialHealth - Castle.towers[0].Health << endl;
+	out << "T2_Total_Damage :" << stats.Tower_intialHealth - Castle.towers[1].Health << endl;
+	out << "T3_Total_Damage :" << stats.Tower_intialHealth - Castle.towers[2].Health << endl;
+	out << "T4_Total_Damage :" << stats.Tower_intialHealth - Castle.towers[3].Health << endl;
+	out << endl;
+
+	out << "R1_Distance :" << Castle.towers[0].UnpavedArea << endl;
+	out << "R2_Distance :" << Castle.towers[1].UnpavedArea << endl;
+	out << "R3_Distance :" << Castle.towers[2].UnpavedArea << endl;
+	out << "R4_Distance :" << Castle.towers[3].UnpavedArea << endl;
+	out << endl;
 
 	if (whoWon == 'C') {
-		out << " GAME IS A WIN" << endl;
+		out << " GAME IS A WIN" << endl << endl;
 		out << "Total Number of Enemies : " << stats.Total_killed << endl;
 		out << "Avarage Figth Delay : " << (double)stats.FightDelay / (double)stats.Total_killed << endl;
 		out << "Avarage Kill Delay : " << (double)stats.KillDelay / (double)stats.Total_killed << endl;
 	}
 	else {
-		cout <<" GAME IS A LOSS" << endl;
+		out << " GAME IS A LOSS" << endl << endl;
 		out << "Number of Killed Enemies : " << stats.Total_killed << endl;
 		out << "Number of Alive Enemies : " << stats.Total_active + stats.Total_inactive << endl;
 		out << "Avarage Figth Delay : " << (double)stats.FightDelay / (double)stats.Total_killed << endl;
 		out << "Avarage Kill Delay : " << (double)stats.KillDelay / (double)stats.Total_killed << endl;
 	}
-	out << "END OF SIMULATION" << endl;
+	out <<endl<< "END OF SIMULATION" << endl;
 }

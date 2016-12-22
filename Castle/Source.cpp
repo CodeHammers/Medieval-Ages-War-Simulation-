@@ -2,18 +2,25 @@
 
 int main()
 {
-	SetWindow();	//adjust game window settings
-	castle ct;      // define a castle 
-	Statistics stats;
+	SetWindow();	   //Adjusting game window settings.
+	castle ct;         //Define a castle. 
+	Statistics stats;  //Define a statistics hub to store all stats.
+	//Intializing stats variables.
 	stats.FightDelay = 0, stats.KillDelay = 0, stats.Total_active = 0, stats.lastKilled = 0;
 	stats.Total_inactive = 0, stats.Total_killed = 0, stats.Tower_intialHealth = 0;
 
-	ofstream out;
+	ofstream out;   //creating an output stream to produce the output file.
 	
-	out.open("output.txt", ios::out);
-	PrintTabs(out);
-	char won = ' '; bool CastleDestroyed = false;
+	out.open("output.txt", ios::out);  //opening the output file for writing.
 
+	PrintTabs(out);   //printing tabs of the table in the output file.
+
+	char won = ' ';    //store a character to denote who won the war.
+	bool CastleDestroyed = false;  //to check if the whole castle has been desotryed.
+	enemy** enemies = NULL;  //pointer to a dynamically allocated array of pointers 
+	                         //enemies used in the utility for drawing enemies.
+
+	//setting constants of the castle.
 	ct.Xstrt = CastleXStrt;
 	ct.Ystrt = CastleYStrt;
 	ct.W = CastleWidth;
@@ -43,28 +50,35 @@ int main()
 	//Intializing the time step counter to 1.
 	int timestep = 1, mode = 0;
 
+	/*implementing the mode feature.
+	interactive mode : runs automatically and displays output.
+	step-by-step mode : wait for user input to continue running.
+	silent mode : runs behind the doors, produces an output file only*/
 	cout << "In what mode you want to run the simulation " << endl;
-	cout << "Enter 0 for interactive mode" << endl;
+	cout << "Enter 0 for interactive mode"  << endl;
 	cout << "Enter 1 for step-by-step mode" << endl;
 	cout << "Enter 2 for silent mode" << endl;
 	cin >> mode;
-	//ct.towers[1].Health = 0;
-
+	
 	//execute at least once.
 	do
 	{
 		//Activate all regular enemies with an arrival time matching the timestep.
-		Activate(in_regFigthersHead, ac_regFigthersHead, timestep, RegSize);
+		Activate(in_regFigthersHead, ac_regFigthersHead, timestep, RegSize,stats);
 
 		//Activate all shielded enemies with an arrival time matching the timestep.
-		Activate(in_SHFighterHead, ac_SHFighterHead, timestep, SHsize);
+		Activate(in_SHFighterHead, ac_SHFighterHead, timestep, SHsize,stats);
 
+		//updating the value of total number of active enemies after each activiation.
 		stats.Total_active = SHsize + RegSize;
-
+		
+		//check for reloading enemies, activiate then when their reloading prd ends.
 		CheckReloadingEnemies(ac_regFigthersHead, ac_SHFighterHead);
 
-		enemy** enemies = new enemy*[SHsize + RegSize];
+		//dynamically allocating and array of pointers with the size of the total alive.
+		enemies = new enemy*[SHsize + RegSize];
 
+		//filling the array with pointers to all enemies.
 		enemy *itr = ac_SHFighterHead;
 		for (int i = 0; i < SHsize; i++) {
 			enemies[i] = itr;
@@ -77,51 +91,67 @@ int main()
 			itr = itr->next;
 		}
 
+		//if the simulation runs within the silent mode, DON'T display data.
 		if (mode != 2) {
 			DrawCastle(ct, timestep, stats);
 			DrawEnemies(enemies, stats.Total_active);
 		}
-		DeadHead = NULL;
 
-		//Enemies Shoot the castle
+		//reseting the dead head to NULL after each timestep, same with the num of killed.
+		DeadHead = NULL; stats.lastKilled = 0;
+
+		/*Active non-reloading enemies start shooting the towers, enemy to tower damage
+		is calculated and the tower health is reduced accordingly, also checks for tower
+		destruction, relocate enemies to adjacent regions if needed*/
 		EnemyShoot(ac_regFigthersHead, ac_SHFighterHead, in_regFigthersHead, in_SHFighterHead, ct);
 
-		//Castle Shoots Enemies
+		/*The towers shoots N enemies in its region at most based on their pirority, checks
+		for dead enemies, moves them to the dead list, update enemies priorities when needed*/
 		TowerShoot(ac_SHFighterHead, Constants, ac_regFigthersHead,
-			DeadHead, timestep, ct.towers, RegSize, SHsize, stats);
+			       DeadHead, timestep, ct.towers, RegSize, SHsize, stats);
 
-		//pavers pave if possible  
+		//updating the number of active enemies after the tower shoots, in case of death of an active enemy.
+		stats.Total_active = SHsize + RegSize;
+
+		//non-reloading pavers pave.  
 		Pave(ac_regFigthersHead, ct);
 
-		//Enemies move
+		//Enemies move according to their speed if the ahead movement range is paved.
 		MoveEnemies(ac_regFigthersHead, ac_SHFighterHead, ct);
 
+		//processes the deah list, extract all the needed data, output it to the ouput file
+		//then frees the memory by deleting all killed enemies every timestep.
 		CollectStatistics(DeadHead, stats, out);
 
+		//checks if the castle was destoryed or not.
 		WhoWon(ct, won, CastleDestroyed);
 
-		stats.lastKilled = 0;
-
 		timestep++; //incrementing the timestep by one. 
+
+
 		if (mode == 0)
-			Sleep(1000);
+			Sleep(1000);    //pause a sec. to be able to follow dispaly changes.
 		else if(mode == 1)
-			cin.get();
+			cin.get();      //wait for user input.
 
 	} while (!((ac_regFigthersHead == NULL&&ac_SHFighterHead == NULL
 		&&in_regFigthersHead.bounds.front == NULL
 		&&in_SHFighterHead.bounds.front == NULL) || CastleDestroyed));
-	/* loop as long as we don't have any active regular enemies, nor shieled
-	active enemies, nor inactive regular enemies, nor inactive shielded enemies*/
+	/*loop until either all enemies died or the castle has been destoryed*/
 
-	//just for testing
+	//Drawing the castle and enemies on more time to reflect last timestep's changes.
+	DrawCastle(ct, timestep, stats);
+	DrawEnemies(enemies, stats.Total_active);
+
+	//Output the simulation status to the output file.
 	OutputSimStatus(stats,ct, won,out);
-	out.close();
-	cin.get();
-	//Printing the time taken for the simulation to finalize.
-	cout << endl << " Time taken : " << timestep - 1 << endl;
 
+	//Printing the time taken for the simulation to finalize.
+	out << endl << " Time taken : " << timestep - 1 << endl;
+
+	out.close();   //closing the output file.
+	
 	//END OF SIMULATION.
-	cout << "\n ALL enemies died , simulation terminated . \n" << " War ended !";
+
 	cin.get();
 }

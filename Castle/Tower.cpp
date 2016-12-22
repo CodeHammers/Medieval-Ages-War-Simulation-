@@ -1,49 +1,17 @@
 #include "EnemyAndTower.h"
 
-////inserting a tower node in a list.
-//bool InsertTower(Tower* &towerH, double TH, int TKC , double FP)
-//{
-//
-//	Tower* tower = new Tower;  //Allocating memory for the tower node.
-//
-//	//filling tower data into the node.
-//	tower->Health = TH;
-//	tower->TowerKillingCapacity = TKC;
-//	tower->TowerFirePower = FP;
-//	tower->UnpavedArea = 30;
-//	tower->next = NULL;
-//
-//	if (towerH == NULL) {  //handling insertion at head.
-//		towerH = tower;
-//		return true;
-//	}
-//	else {
-//
-//		Tower* iterator = towerH;
-//
-//		while (iterator->next != NULL) {
-//			iterator = iterator->next;
-//		}
-//
-//		iterator->next = tower;
-//		return true;
-//	}
-//
-//	return false;
-//}
-
-
-//The function calculates the priority which is the main criteria for 
-//towers to choose between shielded active enemies 
-//calculation is done through the formula  specified in the document  
+/*The function calculates the priority which is the main criteria for 
+towers to choose between shielded active enemies 
+calculation is done through the formula  specified in the document*/ 
 double CalculatePriority(enemy *SHfighter,double Constants[3])
 {
+	//uses the equation specified in the project description to calc. priority.
 	return SHfighter->FirePower/SHfighter->Distance * Constants[0]
 	+ Constants[1]/(SHfighter->ReloadPeriod + 1) + SHfighter->Health*Constants[2];
 }
 
-//updates the priorities at each time step 
-//Perform any needed one 
+//updates the priorities at each time step. 
+//Perform any needed one. 
 void UpdatePriority(enemy* &SHhead,double Constants[3])
 {
 	enemy* tempHead=NULL;
@@ -55,6 +23,7 @@ void UpdatePriority(enemy* &SHhead,double Constants[3])
 	}
 	SHhead=tempHead;
 }
+
 
 //The function inserts the enemy in the list while keeping
 //the list sorted by priority 
@@ -88,6 +57,8 @@ void insertByPriority(enemy*  &SHhead, enemy* SHfighter)
 	prev->next=SHfighter;
 	SHfighter->next=NULL;
 }
+
+
 //The function picks first N enemies to shoot for all tower at once
 //NO NEED TO CALL IT FOUR TIMES!!!!!!!!
 void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead, 
@@ -98,16 +69,18 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 	enemy* shotEnemy=NULL;
 
 	for(int k=0;k<4;k++){
+		//resetting values.
 		int i = 0; SHiterator = SHhead, regIterator = regHead;
 
+		//loop until the list is empty, or the tower can't shoot anymore, only if the tower isn't destoryed.
 		while(SHiterator!=NULL && i< towers[k].TowerKillingCapacity && !towers[i].Destroyed){
 			if(SHiterator->Region==65+k){
-				if(SHiterator->FirstShotTime==-1)
+				if(SHiterator->FirstShotTime==-1)   //-1 denotes, hasn't been shot before.
 					SHiterator->FirstShotTime=timeStep;
 
-				SHiterator->Health -=towers[k].TowerFirePower;
+				SHiterator->Health -=towers[k].TowerFirePower;  //do damage.
 
-				//call checks if dead
+				//calls checks if dead.
 				shotEnemy=SHiterator; 
 				SHiterator = SHiterator->next;
 				checkDead(shotEnemy,SHhead,DeadHead,timeStep,SHsize,stats);
@@ -117,13 +90,15 @@ void PickAndShoot(Tower towers[4],enemy* &SHhead,enemy* &regHead,
 				SHiterator = SHiterator->next;
 		}
 
+		//loop until the list is empty, or the tower can't shoot anymore, only if the tower isn't destoryed.
 		while(regIterator!=NULL && i< towers[k].TowerKillingCapacity && !towers[i].Destroyed){
 			if(regIterator->Region==65+k){
 				if(regIterator->FirstShotTime==-1)
-					regIterator->FirstShotTime=timeStep;
+					regIterator->FirstShotTime=timeStep; //-1 denotes, hasn't been shot before.
+
 				regIterator->Health -=towers[k].TowerFirePower;
 
-				//call checks if dead
+				//calls checks if dead.
 				shotEnemy=regIterator; 
 				regIterator = regIterator->next;
 				checkDead(shotEnemy,regHead,DeadHead,timeStep,RegSize,stats);
@@ -140,21 +115,23 @@ void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeSte
 	if(shotEnemy->Health<=0){
 		size--;
 		stats.Total_killed++; stats.lastKilled++;
-		//preparing to die , gathering statistics
+		//preparing to die , gathering statistics.
 		shotEnemy->DeathTime=timeStep;
 		shotEnemy->Health = 0;
-		DetachEnemy(shotEnemy, activeHead);
-		//Die,Dog!
-		Kill(shotEnemy, DeadHead);
+		DetachEnemy(shotEnemy, activeHead);  //detaches the enemy for active list.
+		Kill(shotEnemy, DeadHead); //inserts the enemy in the killed list.
 	}
 }
 
+//Collective function that calls other minor functions for simplicity when calling in main.
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead, enemy* &DeadHead
 				,int timeStep,Tower towers[4],int &RegSize,int &SHsize,Statistics &stats){
+	
 	UpdatePriority(SHhead,Constants);
 	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep,RegSize,SHsize,stats);
 }
 
+//checks whether the castle was destoryed or not.
 void WhoWon(castle &ct,char& flag,bool& CastleDestroyed)
 {
 	int counter = 0; 

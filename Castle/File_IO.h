@@ -7,6 +7,8 @@
 /*A function to load the input file and extract data*/
 void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &stats);
 
-//void OutputKilled(int FD, int KD, int FT, int KTS, int S);
+/*A function to write all the needed stats in the output file*/
 void OutputSimStatus(Statistics &stats, castle &Castle, char whoWon,ofstream &out);
+
+/*A function to print table tabs*/
 void PrintTabs(ofstream &out);
