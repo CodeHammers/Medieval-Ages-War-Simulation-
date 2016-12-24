@@ -185,6 +185,9 @@ void DrawEnemy(const enemy& E, int Ypos)
 	case FITR:
 		color(FOREGROUND_RED|FOREGROUND_GREEN);//Yellow
 		break;
+	case JamesBond:
+		color(FOREGROUND_BLUE); //new type.
+		break;
 	default:
 		color(FOREGROUND_RED);
 	}

@@ -123,7 +123,7 @@ void MoveFromTo(enemy* &origin, enemy* &destination)
 	}
 }
 
-
+//James Bond is always active and on the look out for incoming threats.
 void Activate(Queue &inactiveH, enemy* &activeH, int timestep,int&counter,Statistics &stats)
 {
 	enemy* current = inactiveH.bounds.front;
@@ -186,6 +186,7 @@ void DetachEnemy(enemy* ToBeDeleted, enemy* &ActiveH)
 	ToBeDeleted->next = NULL;
 }
 
+//Caslte agents don't shoot the tower.
 void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 {
 	double damage = 0.0;
@@ -207,8 +208,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 			RegFigthers->Reloading = true;   //set the enemy who made a shot as reloading.
 			RegFigthers->Hold = RegFigthers->ReloadPeriod; //for a period equals the reload prd.
 		}
-		else 
-			RegFigthers = RegFigthers->next;
+		RegFigthers = RegFigthers->next;
 	}
 
 	while (SHfighters != NULL) {
@@ -228,46 +228,54 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters,double* Arr)
 
 			SHfighters->Reloading = true;  //set the enemy who made a shot as reloading.
 			SHfighters->Hold = SHfighters->ReloadPeriod;  //for a period equals the reload prd.
-			SHfighters = SHfighters->next;
 		}
-		else
-			SHfighters = SHfighters->next;
+		SHfighters = SHfighters->next;
 	}
 }
 
 void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH,
-	                 int Nregion, castle &Castle)
+	                 int Nregion, castle &Castle,int oldRegion)
 {
 	enemy* AF = ActiveF, *ASF = ActiveSF;
 	enemy* inF = inACF.bounds.front, *inSF = inACSFH.bounds.front;
 
 	//For all inactive enemies.
 	while (inF != NULL) {
-		inF->Region = (REGION)(65+Nregion); //change the region in a clockwise manner.
+		if (inF->Region == oldRegion + 65) 
+			inF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+			
 		inF = inF->next;
 	}
 
 	while (inSF != NULL) {
-		inSF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+		if (inSF->Region == oldRegion + 65)
+			inSF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+		
 		inSF = inSF->next;
 	}
 	
 	//For all active enemies.
 	while (AF != NULL) {
-		AF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
-		if (AF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
-			AF->Distance = Castle.towers[Nregion].UnpavedArea;
+		if (AF->Region == oldRegion + 65) {
+			AF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+			if (AF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
+				AF->Distance = Castle.towers[Nregion].UnpavedArea;
+		}
 		AF = AF->next;
 	}
 
 	while (ASF != NULL) {
-		ASF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
-		if (ASF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
-			ASF->Distance = Castle.towers[Nregion].UnpavedArea;
+		if (ASF->Region == oldRegion + 65) {
+			ASF->Region = (REGION)(65 + Nregion); //change the region in a clockwise manner.
+			if (ASF->Distance < Castle.towers[Nregion].UnpavedArea) //placing enemies at the right position.
+				ASF->Distance = Castle.towers[Nregion].UnpavedArea;
+		}
 		ASF = ASF->next;
 	}
+
 }
 
+//checks wether a tower has been destroyed or not and determine the next tower to move enemies to.
 void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF, 
 	                  enemy* &ActiveSF, Queue &inACF, Queue &inACSFH)
 {
@@ -278,15 +286,15 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 			Castle.towers[i].Health = 0;
 
 			int newRegion = (i + 1) % 4;  //determine the next region to move to in a circular manner.
-			for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < 3; k++) {
 				if (Castle.towers[newRegion].Destroyed) //checks if the next tower is destoryed or not.
-					newRegion++;  //if true, checks the next tower.
+					newRegion = (newRegion+1)%4;  //if true, checks the next tower.
 				else
 					break;  //if false, breaks.
 			}
 
 			//reloacting enemies.
-			RelocateEnemies(ActiveF, ActiveSF, inACF, inACSFH, newRegion,Castle);
+			RelocateEnemies(ActiveF, ActiveSF, inACF, inACSFH, newRegion,Castle,i);
 		}
 	}
 }
@@ -294,7 +302,9 @@ void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
 //Collective function that calls other minor functions for simplicity when calling in main.
 void EnemyShoot(enemy*&AF, enemy*&ASF, Queue&inF, Queue&inSF, castle&Castle)
 {
-	double Arr[4]{ 0 };
+	double Arr[4];  
+	//intializes the whole array to zero.
+	Arr[0] = 0.0, Arr[1] = 0.0, Arr[2] = 0.0, Arr[3] = 0.0;
 	EnemyToTowerDamage(AF, ASF,Arr);
 	CheckDestruction(Castle, Arr, AF, ASF, inF, inSF);
 }
@@ -316,19 +326,27 @@ void CollectStatistics(enemy* DeadHead,Statistics &stats,ofstream &out)
 	int FD, KD, FT; enemy* ToBeDeleted = NULL;
 
 	while (DeadHead != NULL) {
-		FD = DeadHead->FirstShotTime - DeadHead->ArrivalTime;
-		KD = DeadHead->DeathTime - DeadHead->FirstShotTime;
-		FT = DeadHead->DeathTime - DeadHead->ArrivalTime;
-		stats.FightDelay += FD;
-		stats.KillDelay += KD;
-		OutputKilled(FD, KD, FT,DeadHead->DeathTime,DeadHead->ID,out);
-		ToBeDeleted = DeadHead;
-		DeadHead = DeadHead->next;
-		delete ToBeDeleted;
+		if (DeadHead->Type == JamesBond) {
+			ToBeDeleted = DeadHead;
+			DeadHead = DeadHead->next;
+			delete ToBeDeleted;
+		}
+		else {
+			FD = DeadHead->FirstShotTime - DeadHead->ArrivalTime;
+			KD = DeadHead->DeathTime - DeadHead->FirstShotTime;
+			FT = DeadHead->DeathTime - DeadHead->ArrivalTime;
+			stats.FightDelay += FD;
+			stats.KillDelay += KD;
+			OutputKilled(FD, KD, FT, DeadHead->DeathTime, DeadHead->ID, out);
+			ToBeDeleted = DeadHead;
+			DeadHead = DeadHead->next;
+			delete ToBeDeleted;
+		}
 	}
 }
 
 //should be called simultaneoulsy with the activate function.
+//James Bond don't reload, he is always ready with his lethal weapon.
 void CheckReloadingEnemies(enemy* &ACF, enemy* &ACSF)
 {
 	enemy* it_ACF = ACF, *it_ACSF = ACSF;
@@ -428,11 +446,13 @@ bool IsPaved(enemy* Enemy, castle &Castle)
 }
 
 //moves enemies according to their speeds.
+//James Bond doesn't move, he is a camper who shoots pavers until getting detected and killed.
 void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle)
 {
 	enemy*ptr = ActiveH;
 	enemy*ptr2 = ActiveShH;
 
+	//Note:when moving pavers we need to check wether the movement range is paved or not.
 	while (ptr != NULL)
 	{
 		if (ptr->Distance > 1+ptr->speed)

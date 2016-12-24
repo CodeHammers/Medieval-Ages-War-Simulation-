@@ -49,7 +49,7 @@ void EnemyToTowerDamage(enemy* RegFigthers, enemy* SHfighters, double* Arr);
 
 /*A function to realocate enemies in case of a tower destruction*/
 void RelocateEnemies(enemy*&ActiveF, enemy*&ActiveSF, Queue&inACF, Queue&inACSFH,
-	                 int Nregion, castle &Castle);
+	                 int Nregion, castle &Castle,int oldRegion);
 
 /*A function to check whether is destoryed or not*/
 void CheckDestruction(castle &Castle, double* Arr, enemy*&ActiveF,
@@ -79,10 +79,19 @@ void MoveEnemies(enemy* &ActiveH, enemy* &ActiveShH, castle &Castle);
 /*A function that completes all operations associated with shooting the tower*/
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead
 				, enemy* &DeadHead,int timeStep,Tower towers[4],
-	            int &RegSize,int &SHsize,Statistics &stats);
+	            int &RegSize,int &SHsize,Statistics &stats,castle &ct);
 
 /*A function to update the unpaved area in a tower*/
 void getUnPavedAreaResult(Tower &t, enemy *e );
 
 /*A function to determine who won the simulation*/
 void WhoWon(castle &ct, char& flag, bool& CastleDestroyed);
+
+/*A function to make castle agnets shoot pavers only before gettting detected*/
+void JamesBondShoots(enemy* &regFighters, enemy* &Deadhead, castle &ct, Statistics &stats, int timestep, int &Regsize);
+
+/*A function to check when the castle agents get detected and killed*/
+void BondDied(enemy* Bond, enemy* &Deadhead, Statistics &stats, castle &ct);
+
+/*A function to inserts a node in the end of a linked list*/
+void InsertEnd(enemy* &head, enemy*&data,Statistics &stats);

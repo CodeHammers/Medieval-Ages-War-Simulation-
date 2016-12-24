@@ -24,7 +24,7 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 		Castle.towers[i].UnpavedArea = 30;
 		Castle.towers[i].Destroyed = false;
 	}
-	stats.Tower_intialHealth = TowerHealth;
+	stats.Tower_intialHealth = (int)TowerHealth;
 
 	//loading the constants used in calculations and storing them in an array.
 	for (int i = 0; i < 3; i++) {
@@ -65,6 +65,10 @@ void LoadFile(double* Con,castle &Castle ,Queue &regHead,Queue &SFH,Statistics &
 		//Put all shield fighters in one queue
 		if (Type == SHLD_FITR) 
 			Enqueue(SFH, Data,stats);
+
+		//Insert each JamesBond in the corresponding castle region.    
+		else if (Type == JamesBond) 
+			InsertEnd(Castle.towers[Region - 65].Agents, Data, stats);
 			
 		//Put all other regular fighters in a seperate queue
 		else

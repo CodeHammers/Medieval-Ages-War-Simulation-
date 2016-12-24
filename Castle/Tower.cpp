@@ -123,12 +123,61 @@ void checkDead(enemy* shotEnemy,enemy * &activeHead,enemy* &DeadHead,int timeSte
 	}
 }
 
+//Checks for JamesBond detection.
+void BondDied(enemy* Bond,enemy* &Deadhead,Statistics &stats,castle &ct)
+{
+	if (Bond->Health <= 0) {
+		stats.num_Agents--;     //we don't need other stats for agent101.
+		Bond->Health = 0;
+		DetachEnemy(Bond, ct.towers[Bond->Region - 65].Agents);
+		Kill(Bond, Deadhead);
+	}
+}
+
+
+/*each tower have a pointer that points to the head of a linked list of agents,
+the function picks pavers whom are in the same region as JamesBond and shoots them only once
+each timestep, each JamesBond is allowed to make only one shot every timestep to avoid
+quick detection and stay under cover as much as he could, every shot costs JamesBond to
+lose 2 health points, JamesBond's health resembles the time he can stay undercover*/
+void JamesBondShoots(enemy* &regFighters,enemy* &Deadhead, castle &ct,Statistics &stats,int timestep,int &Regsize)
+{
+	enemy* reg = regFighters, *JamesBond = NULL; int R = 65;
+	for (int i = 0; i < 4; i++) {
+			JamesBond = ct.towers[i].Agents; //the pointer changes every iteration to point to another list.
+
+			while (reg != NULL && JamesBond != NULL) {
+				if (reg->Type == PVR && reg->Region == R) {
+					if (reg->FirstShotTime == -1)
+						reg->FirstShotTime = timestep;
+
+					reg->Health -= JamesBond->FirePower; //shoot paver.
+					JamesBond->Health -= 2;  //reduce time undercover.
+
+					enemy* ShotEnemy = reg;
+					enemy* DeadBond = JamesBond;
+
+					JamesBond = JamesBond->next; //James shot, move to another James.
+					reg = reg->next;   //A paver has been shot, move to another paver.
+
+					//check for dead JamesBond or dead pavers.
+					checkDead(ShotEnemy, regFighters, Deadhead, timestep, Regsize, stats);
+					BondDied(DeadBond, Deadhead, stats, ct);
+				}
+				else
+					reg = reg->next;  //if the pavers isn't in James's region, check another one.
+			}
+		R++;
+	}
+}
+
 //Collective function that calls other minor functions for simplicity when calling in main.
 void TowerShoot(enemy* &SHhead,double Constants[3],enemy* &regHead, enemy* &DeadHead
-				,int timeStep,Tower towers[4],int &RegSize,int &SHsize,Statistics &stats){
+				,int timeStep,Tower towers[4],int &RegSize,int &SHsize,Statistics &stats,castle &ct){
 	
 	UpdatePriority(SHhead,Constants);
 	PickAndShoot(towers,SHhead,regHead,DeadHead,timeStep,RegSize,SHsize,stats);
+	JamesBondShoots(regHead,DeadHead,ct,stats,timeStep,RegSize);
 }
 
 //checks whether the castle was destoryed or not.
@@ -146,4 +195,21 @@ void WhoWon(castle &ct,char& flag,bool& CastleDestroyed)
 	else {
 		flag = 'C';
 	}
+}
+
+//Insert a castle agent into a linked list.
+void InsertEnd(enemy* &head, enemy*&data, Statistics &stats)
+{
+	data->ArrivalTime = 0;  //Castle agents are active all the time, always on the look out.
+	data->next = NULL;
+
+	if (head == NULL)
+		head = data;
+	else {
+		enemy* iterator = head;
+		while (iterator->next != NULL)
+			iterator = iterator->next;
+		iterator->next = data;
+	}
+	stats.num_Agents++;  //variable to keep track of the agents number.
 }

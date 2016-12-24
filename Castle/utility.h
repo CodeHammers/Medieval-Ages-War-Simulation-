@@ -11,13 +11,20 @@ enum REGION {
 	D_REG
 };
 
-//Enemy types: Paver, Fighter, and Shielded Fighter
+//Enemy types: Paver, Fighter, Shielded Fighter and the castle agent: JamesBond.
 enum Etype {
 	PVR,
 	FITR,
-	SHLD_FITR
+	SHLD_FITR,
+	JamesBond //refer to the next comment for description.
 };
 
+/*James Bond Description : He is a devoted castle agent, appears on the display in a
+blue outfit, he is a camper so he doesn't move, he only snips pavers while in cover,
+when the tower he is serving is desotyed, he disables himself, he is equipped with a 
+high caliber weapon so he doesn't need to reload as he operates for a short period anyway, 
+but unfortunately each shot that he makes jeopardizes his disguise, so after a certain
+number of shots, he gets detected and instantaneously killed*/
 
 
 //constants
@@ -32,6 +39,24 @@ enum Etype {
 
 #define EnemyShape		219  //ASCII code of enemy char shape 
 
+struct enemy
+{
+	int ID;			//Each enemy has a unique ID (sequence number)
+	REGION Region;	//Region of this enemy
+	int Distance;	//Distance to the castle
+	double Health;
+	Etype Type;		//PVR, FITR, SHLD_FITR
+	int ArrivalTime;
+	double FirePower;
+	int ReloadPeriod;
+	double Priorty;
+	bool Reloading;
+	int DeathTime;
+	int FirstShotTime;
+	int Hold;
+	int speed;
+	enemy* next;      //pointer used for linked list construction
+};
 
 
 //Tower
@@ -44,6 +69,7 @@ struct Tower
 	double TowerFirePower;    
 	int UnpavedArea;  
 	bool Destroyed;
+	enemy* Agents = NULL;  //pointer a linked list of agents in each region.
 };
 
 struct castle
@@ -56,24 +82,6 @@ struct castle
 	Tower towers[4];	//Castle has 4 towers
 };
 
-struct enemy
-{
-	int ID;			//Each enemy has a unique ID (sequence number)
-	REGION Region;	//Region of this enemy
-	int Distance;	//Distance to the castle
-	double Health;	
-	Etype Type;		//PVR, FITR, SHLD_FITR
-	int ArrivalTime;  
-	double FirePower; 
-	int ReloadPeriod; 
-	double Priorty;
-	bool Reloading;
-	int DeathTime;
-	int FirstShotTime;
-	int Hold;
-	int speed;
-	enemy* next;      //pointer used for linked list construction
-};
 
 //Queue struct
 struct Bounds
@@ -98,6 +106,7 @@ struct Statistics
 	int FightDelay;
 	int KillDelay;
 	int Tower_intialHealth;
+	int num_Agents;
 };
 
 

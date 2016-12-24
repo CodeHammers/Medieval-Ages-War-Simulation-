@@ -7,7 +7,7 @@ int main()
 	Statistics stats;  //Define a statistics hub to store all stats.
 	//Intializing stats variables.
 	stats.FightDelay = 0, stats.KillDelay = 0, stats.Total_active = 0, stats.lastKilled = 0;
-	stats.Total_inactive = 0, stats.Total_killed = 0, stats.Tower_intialHealth = 0;
+	stats.Total_inactive = 0, stats.Total_killed = 0, stats.Tower_intialHealth = 0, stats.num_Agents = 0;
 
 	ofstream out;   //creating an output stream to produce the output file.
 	
@@ -19,7 +19,7 @@ int main()
 	bool CastleDestroyed = false;  //to check if the whole castle has been desotryed.
 	enemy** enemies = NULL;  //pointer to a dynamically allocated array of pointers 
 	                         //enemies used in the utility for drawing enemies.
-
+	
 	//setting constants of the castle.
 	ct.Xstrt = CastleXStrt;
 	ct.Ystrt = CastleYStrt;
@@ -45,7 +45,6 @@ int main()
 
 	//calling the load file function to extract data from the input file.
 	LoadFile(Constants, ct, in_regFigthersHead, in_SHFighterHead, stats);
-
 
 	//Intializing the time step counter to 1.
 	int timestep = 1, mode = 0;
@@ -75,26 +74,41 @@ int main()
 		//check for reloading enemies, activiate then when their reloading prd ends.
 		CheckReloadingEnemies(ac_regFigthersHead, ac_SHFighterHead);
 
-		//dynamically allocating and array of pointers with the size of the total alive.
-		enemies = new enemy*[SHsize + RegSize];
-
-		//filling the array with pointers to all enemies.
+		//dynamically allocating and array of pointers with the size of the total alive and agents.
+		enemies = new enemy*[stats.Total_active + stats.num_Agents];
+		
+		//filling the array with pointers to all shielded enemies.
 		enemy *itr = ac_SHFighterHead;
 		for (int i = 0; i < SHsize; i++) {
 			enemies[i] = itr;
 			itr = itr->next;
 		}
-
+		
+		//filling the rest of the array with pointers to all regular enemies.
 		itr = ac_regFigthersHead;
 		for (int i = SHsize; i < RegSize + SHsize; i++) {
 			enemies[i] = itr;
 			itr = itr->next;
 		}
+		
+		//filling the array with pointers to all castle agents.
+		int k = RegSize + SHsize;
+		for (int i = 0; i < 4; i++) {
+			itr = ct.towers[i].Agents;
+			while (itr!= NULL) {
+				enemies[k] = itr;
+				k++;
+				itr = itr->next;
+			}
+		}
+
+		if (mode == 1)
+			cin.get(); //wait for user input.
 
 		//if the simulation runs within the silent mode, DON'T display data.
 		if (mode != 2) {
 			DrawCastle(ct, timestep, stats);
-			DrawEnemies(enemies, stats.Total_active);
+			DrawEnemies(enemies, stats.Total_active+stats.num_Agents);
 		}
 
 		//reseting the dead head to NULL after each timestep, same with the num of killed.
@@ -108,7 +122,7 @@ int main()
 		/*The towers shoots N enemies in its region at most based on their pirority, checks
 		for dead enemies, moves them to the dead list, update enemies priorities when needed*/
 		TowerShoot(ac_SHFighterHead, Constants, ac_regFigthersHead,
-			       DeadHead, timestep, ct.towers, RegSize, SHsize, stats);
+			       DeadHead, timestep, ct.towers, RegSize, SHsize, stats,ct);
 
 		//updating the number of active enemies after the tower shoots, in case of death of an active enemy.
 		stats.Total_active = SHsize + RegSize;
@@ -131,8 +145,6 @@ int main()
 
 		if (mode == 0)
 			Sleep(1000);    //pause a sec. to be able to follow dispaly changes.
-		else if(mode == 1)
-			cin.get();      //wait for user input.
 
 	} while (!((ac_regFigthersHead == NULL&&ac_SHFighterHead == NULL
 		&&in_regFigthersHead.bounds.front == NULL
@@ -141,13 +153,13 @@ int main()
 
 	//Drawing the castle and enemies on more time to reflect last timestep's changes.
 	DrawCastle(ct, timestep, stats);
-	DrawEnemies(enemies, stats.Total_active);
+	DrawEnemies(enemies, stats.Total_active+stats.num_Agents);
 
 	//Output the simulation status to the output file.
 	OutputSimStatus(stats,ct, won,out);
 
 	//Printing the time taken for the simulation to finalize.
-	out << endl << " Time taken : " << timestep - 1 << endl;
+	out << endl << " Time taken : " << timestep - 1 << " time steps" << endl;
 
 	out.close();   //closing the output file.
 	
