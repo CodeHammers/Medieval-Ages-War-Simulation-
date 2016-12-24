@@ -1,5 +1,4 @@
 ﻿  Source.cpp
-  Enemy.cpp
-  Generating Code...
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.exe
-  Castle.vcxproj -> F:\DS project local\DS-project-2016\Debug\Castle.pdb (Full PDB)
+Enemy.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  Castle.vcxproj -> D:\Software_Development\C++\DS-project-2016\Debug\Castle.exe
+  Castle.vcxproj -> D:\Software_Development\C++\DS-project-2016\Debug\Castle.pdb (Full PDB)

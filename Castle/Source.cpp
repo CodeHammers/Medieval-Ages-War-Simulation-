@@ -1,7 +1,11 @@
 #include "file_IO.h"
+#include <Windows.h>
+#include <Mmsystem.h>
 
 int main()
 {
+	PlaySound(TEXT("C:\\Test.wav"), NULL, SND_FILENAME);
+
 	SetWindow();	   //Adjusting game window settings.
 	castle ct;         //Define a castle. 
 	Statistics stats;  //Define a statistics hub to store all stats.
