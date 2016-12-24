@@ -4,7 +4,7 @@
 
 int main()
 {
-	PlaySound(TEXT("C:\\Test.wav"), NULL, SND_FILENAME);
+	//PlaySound(TEXT("legendary.wav"), NULL, SND_FILENAME);
 
 	SetWindow();	   //Adjusting game window settings.
 	castle ct;         //Define a castle. 
@@ -164,6 +164,11 @@ int main()
 
 	//Printing the time taken for the simulation to finalize.
 	out << endl << " Time taken : " << timestep - 1 << " time steps" << endl;
+
+	if(won == 'C')
+		PlaySound(TEXT("victory.wav"), NULL, SND_FILENAME);
+	else
+		PlaySound(TEXT("sadtrombone.wav"), NULL, SND_FILENAME);
 
 	out.close();   //closing the output file.
 	

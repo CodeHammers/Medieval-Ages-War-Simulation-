@@ -1,0 +1,41 @@
+KTS      S        FD       KD       FT
+2        1        0        1        1        
+3        2        0        1        1        
+3        3        0        0        0        
+4        5        0        0        0        
+4        6        0        0        0        
+4        4        0        0        0        
+5        9        0        0        0        
+5        7        0        1        1        
+6        10       0        1        1        
+6        12       0        0        0        
+6        11       0        0        0        
+7        13       0        0        0        
+8        14       0        0        0        
+10       15       0        1        1        
+10       17       0        0        0        
+10       16       0        0        0        
+13       24       0        0        0        
+13       23       0        1        1        
+15       25       0        1        1        
+
+
+T1_Total_Damage :0.683333
+T2_Total_Damage :0.5
+T3_Total_Damage :0
+T4_Total_Damage :0.633333
+
+R1_Distance :30
+R2_Distance :30
+R3_Distance :30
+R4_Distance :30
+
+ GAME IS A WIN
+
+Total Number of Enemies : 19
+Avarage Figth Delay : 0
+Avarage Kill Delay : 0.368421
+
+END OF SIMULATION
+
+ Time taken : 15 time steps

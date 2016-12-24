@@ -1,1 +1,26 @@
 KTS      S        FD       KD       FT
+1        3        0        0        0        
+1        2        0        0        0        
+2        5        0        0        0        
+
+
+T1_Total_Damage :200
+T2_Total_Damage :200
+T3_Total_Damage :200
+T4_Total_Damage :200
+
+R1_Distance :30
+R2_Distance :30
+R3_Distance :30
+R4_Distance :0
+
+ GAME IS A LOSS
+
+Number of Killed Enemies : 3
+Number of Alive Enemies : 55
+Avarage Figth Delay : 0
+Avarage Kill Delay : 0
+
+END OF SIMULATION
+
+ Time taken : 7 time steps
